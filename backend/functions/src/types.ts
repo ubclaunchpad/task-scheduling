@@ -7,6 +7,7 @@ export type TaskTypeNoID = {
 
 export type TaskTypeWithID = {
   title: string;
+  id: string;
   description?: string;
   createdAt?: string;
   updatedAt?: Date;
