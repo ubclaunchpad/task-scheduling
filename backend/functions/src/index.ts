@@ -15,18 +15,39 @@ export const helloWorld = functions.https.onRequest((request, response) => {
  * On Failure: Returns 400 Response (Bad Request).
  *             Returns 500 Response (Internal Server Error) on error.
  */
+
+const getTaskFromRequest = (request: functions.Request): TaskType => {
+  const {
+    title,
+    description,
+    dueDate,
+    priority,
+    groupId,
+    creator,
+    createdAt,
+  } = request.body;
+  const task: TaskType = {
+    title,
+    creator,
+    description,
+    dueDate,
+    priority,
+    groupId,
+    createdAt,
+  };
+  return task;
+};
 export const createTask = functions.https
     .onRequest(async (request, response) => {
-      const {title, description} = request.body;
-      if (!title) {
+      const task = {...getTaskFromRequest(request),
+        createdAt: new Date().toISOString(),
+      };
+
+      if (!task.title || !task.creator) {
         response.status(400).send("Title is required.");
         return;
       }
-      const task: TaskType = {
-        title,
-        description,
-        createdAt: new Date().toISOString(),
-      };
+
       try {
         const ref = await admin.firestore().collection("tasks").add(task);
         response.send(ref.id);
@@ -81,19 +102,17 @@ export const updateTask = functions.https
         response.status(400).send("ID is required.");
         return;
       }
-      const {title, description} = request.body;
+      const task = getTaskFromRequest(request);
       try {
         const ref = await admin.firestore().collection("tasks").doc(id);
-        const task = await ref.get();
-        if (!task.exists) {
+        const exists = await (await ref.get()).exists;
+        if (!exists) {
           response.status(404).send("Task not found.");
           return;
         }
-        await ref.update({
-          title,
-          description,
-          updatedAt: new Date().toISOString(),
-        });
+        await ref.update(
+            task
+        );
         response.send("ok");
       } catch (e) {
         response.status(500).send(e);
