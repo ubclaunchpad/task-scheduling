@@ -1,6 +1,6 @@
 import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
-import {TaskTypeNoID} from "./types";
+import {TaskType, TaskTypeWithID} from "./types";
 admin.initializeApp();
 // Start writing Firebase Functions
 // https://firebase.google.com/docs/functions/typescript
@@ -13,6 +13,7 @@ export const helloWorld = functions.https.onRequest((request, response) => {
 /**
  * On Success: Returns the Task's ID.
  * On Failure: Returns 400 Response (Bad Request).
+ *             Returns 500 Response (Internal Server Error) on error.
  */
 export const createTask = functions.https
     .onRequest(async (request, response) => {
@@ -21,7 +22,7 @@ export const createTask = functions.https
         response.status(400).send("Title is required.");
         return;
       }
-      const task: TaskTypeNoID = {
+      const task: TaskType = {
         title,
         description,
         createdAt: new Date().toISOString(),
@@ -35,7 +36,7 @@ export const createTask = functions.https
     });
 
 /**
- * On Success: Returns the Tasks.
+ * On Success: Returns a Task.
  * On Failure: Returns 400 Response (Bad Request).
  */
 export const getTask = functions.https
@@ -48,6 +49,25 @@ export const getTask = functions.https
       try {
         const ref = await admin.firestore().collection("tasks").doc(id).get();
         response.send(ref.data());
+      } catch (e) {
+        response.status(500).send(e);
+      }
+    }
+    );
+
+/**
+ * On Success: Returns all Tasks.
+ * On Failure: Returns 400 Response (Bad Request).
+ */
+export const listTasks = functions.https
+    .onRequest(async (request, response) => {
+      try {
+        const ref = await admin.firestore().collection("tasks").get();
+        const tasks: TaskTypeWithID[] = [];
+        ref.forEach((doc) => {
+          tasks.push(doc.data() as TaskTypeWithID);
+        });
+        response.send(tasks);
       } catch (e) {
         response.status(500).send(e);
       }
@@ -97,4 +117,5 @@ export const deleteTask = functions.https
       }
     }
     );
+
 
