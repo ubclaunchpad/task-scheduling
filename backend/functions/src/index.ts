@@ -46,8 +46,6 @@ export const createTask = functions.https
       const task = {...getTaskFromRequest(request),
         createdAt: new Date().toISOString(),
       };
-      console.log(task);
-
 
       if (!task.title || !task.creator) {
         response.status(400).send("Title is required.");
@@ -58,8 +56,6 @@ export const createTask = functions.https
         const ref = await admin.firestore().collection("tasks").add(task);
         response.send(ref.id);
       } catch (e) {
-        console.log(e);
-
         response.status(500).send(e);
       }
     });
