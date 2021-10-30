@@ -10,46 +10,91 @@ export const helloWorld = functions.https.onRequest((request, response) => {
   response.send("Hello from Firebase!");
 });
 
+/**
+ * On Success: Returns the Task's ID.
+ * On Failure: Returns 400 Response (Bad Request).
+ */
 export const createTask = functions.https
     .onRequest(async (request, response) => {
       const {title, description} = request.body;
+      if (!title) {
+        response.status(400).send("Title is required.");
+        return;
+      }
       const task: TaskTypeNoID = {
         title,
         description,
         createdAt: new Date().toISOString(),
       };
-      const ref = await admin.firestore().collection("tasks").add(task);
-      response.send(ref.id);
+      try {
+        const ref = await admin.firestore().collection("tasks").add(task);
+        response.send(ref.id);
+      } catch (e) {
+        response.status(500).send(e);
+      }
     });
 
+/**
+ * On Success: Returns the Tasks.
+ * On Failure: Returns 400 Response (Bad Request).
+ */
 export const getTask = functions.https
     .onRequest(async (request, response) => {
       const id = request.query.id as string;
-      const ref = await admin.firestore().collection("tasks").doc(id).get();
-      response.send(ref.data());
+      if (!id || typeof id !== "string") {
+        response.status(400).send("ID is required.");
+        return;
+      }
+      try {
+        const ref = await admin.firestore().collection("tasks").doc(id).get();
+        response.send(ref.data());
+      } catch (e) {
+        response.status(500).send(e);
+      }
     }
     );
 
 export const updateTask = functions.https
     .onRequest(async (request, response) => {
       const id = request.query.id as string;
+      if (!id || typeof id !== "string") {
+        response.status(400).send("ID is required.");
+        return;
+      }
       const {title, description} = request.body;
-      const ref = await admin.firestore().collection("tasks").doc(id);
-      await ref.update({
-        title,
-        description,
-        updatedAt: new Date().toISOString(),
-      });
-      response.send("ok");
+      try {
+        const ref = await admin.firestore().collection("tasks").doc(id);
+        const task = await ref.get();
+        if (!task.exists) {
+          response.status(404).send("Task not found.");
+          return;
+        }
+        await ref.update({
+          title,
+          description,
+          updatedAt: new Date().toISOString(),
+        });
+        response.send("ok");
+      } catch (e) {
+        response.status(500).send(e);
+      }
     }
     );
 
 export const deleteTask = functions.https
     .onRequest(async (request, response) => {
       const id = request.query.id as string;
-      const ref = await admin.firestore().collection("tasks").doc(id);
-      await ref.delete();
-      response.send("ok");
+      if (!id || typeof id !== "string") {
+        response.status(400).send("ID is required.");
+        return;
+      }
+      try {
+        const ref = await admin.firestore().collection("tasks").doc(id);
+        await ref.delete();
+        response.send("ok");
+      } catch (e) {
+        response.status(500).send(e);
+      }
     }
     );
 
