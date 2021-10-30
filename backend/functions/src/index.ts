@@ -2,6 +2,10 @@ import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 import {TaskType, TaskTypeWithID} from "./types";
 admin.initializeApp();
+admin.firestore().settings({
+  ignoreUndefinedProperties: true,
+});
+
 // Start writing Firebase Functions
 // https://firebase.google.com/docs/functions/typescript
 //
@@ -42,6 +46,8 @@ export const createTask = functions.https
       const task = {...getTaskFromRequest(request),
         createdAt: new Date().toISOString(),
       };
+      console.log(task);
+
 
       if (!task.title || !task.creator) {
         response.status(400).send("Title is required.");
@@ -52,6 +58,8 @@ export const createTask = functions.https
         const ref = await admin.firestore().collection("tasks").add(task);
         response.send(ref.id);
       } catch (e) {
+        console.log(e);
+
         response.status(500).send(e);
       }
     });
@@ -86,7 +94,7 @@ export const listTasks = functions.https
         const ref = await admin.firestore().collection("tasks").get();
         const tasks: TaskTypeWithID[] = [];
         ref.forEach((doc) => {
-          tasks.push(doc.data() as TaskTypeWithID);
+          tasks.push({...doc.data(), id: doc.id} as TaskTypeWithID);
         });
         response.send(tasks);
       } catch (e) {
