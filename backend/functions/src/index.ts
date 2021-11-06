@@ -2,6 +2,10 @@ import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 import {TaskType, TaskTypeWithID} from "./types";
 admin.initializeApp();
+admin.firestore().settings({
+  ignoreUndefinedProperties: true,
+});
+
 // Start writing Firebase Functions
 // https://firebase.google.com/docs/functions/typescript
 //
@@ -86,7 +90,7 @@ export const listTasks = functions.https
         const ref = await admin.firestore().collection("tasks").get();
         const tasks: TaskTypeWithID[] = [];
         ref.forEach((doc) => {
-          tasks.push(doc.data() as TaskTypeWithID);
+          tasks.push({...doc.data(), id: doc.id} as TaskTypeWithID);
         });
         response.send(tasks);
       } catch (e) {
