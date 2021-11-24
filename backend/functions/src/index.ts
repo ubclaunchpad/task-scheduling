@@ -51,3 +51,28 @@ export const getGroup = functions.https
       }
     });
 
+export const updateGroup = functions.https
+    .onRequest(async (request, response) => {
+      const id = request.query.id as string;
+      if (!id || typeof id !== "string") {
+        response.status(400).send("ID is required.");
+        return;
+      }
+      const group = getGroupFromRequest(request);
+      try {
+        const ref = await admin.firestore().collection("groups").doc(id);
+        const exists = await (await ref.get()).exists;
+        if (!exists) {
+          response.status(404).send("Group not found.");
+          return;
+        }
+        await ref.update(
+            group
+        );
+        response.send("Group updated!");
+      } catch (e) {
+        response.status(500).send(e);
+      }
+    }
+    );
+
