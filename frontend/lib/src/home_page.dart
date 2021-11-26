@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
-import 'login_authentication.dart';
+import '../main.dart';
+import 'dashboard_home.dart';
+import 'home_page_authentication.dart';
 
 
 class LoginPage extends StatelessWidget {
@@ -11,18 +13,38 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-
-        title: Text("Login Page"),
-        ),
-        body: Center(
-
+    return Container(
+        decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+              colors: <Color>[
+                Color.fromRGBO(247, 227, 218, 1.0),
+                Color.fromRGBO(255, 244, 208, 1.0),
+              ],
+            ),
+        ),// red to yellow
         child: Column(
-
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            Consumer<LoginState>(
+            Container(
+              child: Column(
+                children: <Widget>[
+                  Text(
+                    'batch',
+                    style: boldStyle,
+                  ),
+                  Image.asset(
+                    'lib/assets/icons/homelogo.png',
+                    height: 145,
+                    width: 145,
+                  ),
+                ]
+              ),
+              margin: const EdgeInsets.fromLTRB(0, 180, 0, 0),
+            ),
+            Container(
+              child: Consumer<LoginState>(
             // appState will control authentication
               builder: (context, appState, _) => LoginAuthentication(
               signInWithGoogle: appState.signInWithGooglePopUp,
@@ -34,21 +56,78 @@ class LoginPage extends StatelessWidget {
               displayName: appState.displayName,
               imageURL: appState.imageURL,
             ),
-            ),
-              const Divider(
-              height: 8,
-              thickness: 1,
-              indent: 8,
-              endIndent: 8,
-              color: Colors.grey,
-            ),
+
+          ),
+              margin: const EdgeInsets.fromLTRB(65, 0, 65, 140),
+              constraints: const BoxConstraints(
+                maxWidth: 240,
+              )
+
+              )
           ]
         ),
-        )
     );
   }
 }
 
+// return Container(
+// decoration: const BoxDecoration(
+// gradient: LinearGradient(
+// begin: Alignment.centerLeft,
+// end: Alignment.centerRight,
+// colors: <Color>[
+// Color(0x00FDE3D7),
+// Color(0x00FFF4D0),
+// ],
+// ),
+// ),// red to yellow
+// child: Scaffold(
+// body: Center(
+// child: Column(
+// mainAxisAlignment: MainAxisAlignment.start,
+// children: <Widget>[
+// Container(
+// child: Column(
+// children: <Widget>[
+// Text(
+// 'batch',
+// style: boldStyle,
+// ),
+// Image.asset(
+// 'lib/assets/icons/homelogo.png',
+// height: 145,
+// width: 145,
+// ),
+// ]
+// ),
+// margin: const EdgeInsets.fromLTRB(0, 180, 0, 0),
+// ),
+// Container(
+// child: Consumer<LoginState>(
+// // appState will control authentication
+// builder: (context, appState, _) => LoginAuthentication(
+// signInWithGoogle: appState.signInWithGooglePopUp,
+// cancelLogin: appState.cancelLogin,
+// signOut: appState.signOut,
+// authState: appState.authState,
+// userID: appState.userID,
+// userEmail: appState.userEmail,
+// displayName: appState.displayName,
+// imageURL: appState.imageURL,
+// ),
+//
+// ),
+// margin: const EdgeInsets.fromLTRB(65, 0, 65, 140),
+// constraints: const BoxConstraints(
+// maxWidth: 240,
+// )
+//
+// )
+// ]
+// ),
+// )
+// )
+// );
 
 class LoginState extends ChangeNotifier {
 
@@ -91,7 +170,7 @@ class LoginState extends ChangeNotifier {
 
 
 
-  Future signInWithGooglePopUp() async {
+  Future signInWithGooglePopUp(BuildContext context) async {
     User? user;
     _authState = AuthState.pending;
     notifyListeners();
@@ -111,10 +190,17 @@ class LoginState extends ChangeNotifier {
       _displayName = user.displayName!;
       _imageURL = user.photoURL!;
       _authState = AuthState.loggedIn;
+      Navigator.push(context, MaterialPageRoute(builder: (context) =>
+          Dashboard(userID: userID, displayName: displayName, userEmail:
+          userEmail, imageURL: imageURL)));
+    } else {
+      _authState = AuthState.loggedOut;
+
     }
 
-    notifyListeners();
-    print(user);
+
+    // notifyListeners();
+    //print(user);
   }
 
   // Future signInWithGoogle() async {

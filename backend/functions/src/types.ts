@@ -16,4 +16,11 @@ export type TaskType = {
   tags?: string[];
 }
 
+export type UserType = {
+    userName: string;
+    userEmail: string;
+    userProfileURL: string;
+    groups?: string[];
+}
+
 export type TaskTypeWithID = { id: string } & TaskType;

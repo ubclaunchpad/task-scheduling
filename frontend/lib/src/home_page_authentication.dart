@@ -1,6 +1,9 @@
-import 'package:LP_TaskScheduler/src/dashboard_home.dart';
+import 'dashboard_home.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
+
+import '../main.dart';
 
 
 
@@ -36,7 +39,7 @@ class LoginAuthentication extends StatelessWidget {
   // final void Function() startLoginFlow;
 
 
-  final void Function() signInWithGoogle;
+  final void Function(BuildContext context) signInWithGoogle;
   final void Function() cancelLogin;
 
   // final void Function(
@@ -64,14 +67,38 @@ class LoginAuthentication extends StatelessWidget {
         return(
           Column(
             children: <Widget>[
-              SignInButton(
-                Buttons.Google,
-                text: "Sign up with Google",
-                onPressed: () {
-                  signInWithGoogle();
-                  //signInWithGoogle(context);
-                },
+              Container(
+                child: SignInButton(
+                  Buttons.Google,
+                  text: "Sign up with Google",
+                  onPressed: () {
+                    signInWithGoogle(context);
+                    //signInWithGoogle(context);
+                  },
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20)),
+                  elevation: 1.0,
+                  padding: EdgeInsets.fromLTRB(20, 0, 0, 0)
+                    ),
+
+                padding: const EdgeInsets.fromLTRB(0, 0, 0, 30),
               ),
+              RichText(
+                text: TextSpan(
+                    style: mainStyle,
+                    children: <TextSpan>[
+                      const TextSpan(text: 'Don\'t have an account ? '),
+                      TextSpan(
+                          text: 'Sign Up',
+                          style: linkStyle,
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              print('Clicked Sign Up on Home Page');
+                            }),
+                    ]
+                )
+
+              )
             ],
           )
         );
@@ -87,7 +114,7 @@ class LoginAuthentication extends StatelessWidget {
               },
               child:
                 const Text(
-                  'Proceed to Home Page'
+                  'You\'re in ! \nProceed to Home Page'
                 )
 
             )
@@ -99,11 +126,21 @@ class LoginAuthentication extends StatelessWidget {
       // // TODO: Handle this case.
       //   break;
       case AuthState.pending:
-        return const CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(
-              Colors.blue,
-            )
+        return (
+            Column(
+                children: <Widget>[
+                  const CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                      Colors.blue,
+                  )
+              ),
+                OutlinedButton(onPressed: () {
+                  cancelLogin();
+                }, child:
+                  const Text("Cancel Login"))
+                ])
         );
+
       default:
         return(
             const Text("Error : authState does not match "
