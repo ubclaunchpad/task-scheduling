@@ -1,15 +1,31 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:src/create_task.dart';
 import 'package:src/task.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const TaskScheduler());
+  await Firebase.initializeApp();
+  FirebaseFunctions.instance.useFunctionsEmulator('localhost', 5001);
+  runApp(TaskScheduler());
 }
 
 class TaskScheduler extends StatelessWidget {
-  const TaskScheduler({Key? key}) : super(key: key);
+  TaskScheduler({Key? key}) : super(key: key);
+  var fsconnect = FirebaseFirestore.instance;
+  var functions = FirebaseFunctions.instance;
+  myget() async {
+    var d = await fsconnect.collection("tasks").get();
+    // print(d.docs[0].data());
+
+    for (var i in d.docs) {
+      print(i.data());
+    }
+  }
 
   // This widget is the root of your application.
   @override
@@ -101,16 +117,29 @@ class _MyHomePageState extends State<MyHomePage> {
                           reverse: false,
                           itemBuilder: (context, index) {
                             DocumentSnapshot ds = snapshot.data.docs[index];
+                            dynamic data = ds.data();
+                            if (data != null) log(data.toString());
+                            log("data");
+                            if (data == null) {
+                              return Container();
+                            }
                             return Task(
-                                title: ds.data()["title"].toString(),
-                                description:
-                                    ds.data()["description"].toString(),
+                                title: data["title"].toString(),
+                                description: data['description'].toString(),
                                 ds: ds);
                           }))
                   : const Text("NOT CONNECTED TO DATABASE");
             }),
         FloatingActionButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute<void>(
+                builder: (BuildContext context) => const CreateTask(),
+                fullscreenDialog: true,
+              ),
+            ).then((value) => log("popped")); // todo refresh task list
+          },
           child: const Icon(
             Icons.add,
             color: Colors.white,
