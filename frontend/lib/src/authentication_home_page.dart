@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -5,7 +6,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import '../main.dart';
 import 'dashboard_home.dart';
-import 'home_page_authentication.dart';
+import 'authentication_consumer.dart';
 
 
 class LoginPage extends StatelessWidget {
@@ -70,68 +71,10 @@ class LoginPage extends StatelessWidget {
   }
 }
 
-// return Container(
-// decoration: const BoxDecoration(
-// gradient: LinearGradient(
-// begin: Alignment.centerLeft,
-// end: Alignment.centerRight,
-// colors: <Color>[
-// Color(0x00FDE3D7),
-// Color(0x00FFF4D0),
-// ],
-// ),
-// ),// red to yellow
-// child: Scaffold(
-// body: Center(
-// child: Column(
-// mainAxisAlignment: MainAxisAlignment.start,
-// children: <Widget>[
-// Container(
-// child: Column(
-// children: <Widget>[
-// Text(
-// 'batch',
-// style: boldStyle,
-// ),
-// Image.asset(
-// 'lib/assets/icons/homelogo.png',
-// height: 145,
-// width: 145,
-// ),
-// ]
-// ),
-// margin: const EdgeInsets.fromLTRB(0, 180, 0, 0),
-// ),
-// Container(
-// child: Consumer<LoginState>(
-// // appState will control authentication
-// builder: (context, appState, _) => LoginAuthentication(
-// signInWithGoogle: appState.signInWithGooglePopUp,
-// cancelLogin: appState.cancelLogin,
-// signOut: appState.signOut,
-// authState: appState.authState,
-// userID: appState.userID,
-// userEmail: appState.userEmail,
-// displayName: appState.displayName,
-// imageURL: appState.imageURL,
-// ),
-//
-// ),
-// margin: const EdgeInsets.fromLTRB(65, 0, 65, 140),
-// constraints: const BoxConstraints(
-// maxWidth: 240,
-// )
-//
-// )
-// ]
-// ),
-// )
-// )
-// );
-
 class LoginState extends ChangeNotifier {
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _store = FirebaseFirestore.instance;
 
   AuthState _authState = AuthState.loggedOut;
   AuthState get authState => _authState;
@@ -190,19 +133,43 @@ class LoginState extends ChangeNotifier {
       _displayName = user.displayName!;
       _imageURL = user.photoURL!;
       _authState = AuthState.loggedIn;
+      initUser(_userID, _userEmail, _displayName, _imageURL);
       Navigator.push(context, MaterialPageRoute(builder: (context) =>
           Dashboard(userID: userID, displayName: displayName, userEmail:
           userEmail, imageURL: imageURL)));
     } else {
       _authState = AuthState.loggedOut;
-
     }
-
 
     // notifyListeners();
     //print(user);
   }
 
+  Future<void> initUser(String userID, String
+  userEmail, String displayName, String imageURL)
+  async {
+    var doc = await _store.collection('users').doc(userEmail).get();
+    if (!doc.exists) {
+      _store.collection('users').doc(userEmail).set(
+        {
+          'name': displayName,
+          'email': userEmail,
+          'id': userID,
+          // use convention for id's e.g. PG (personal group) + personal
+          // email as id
+          'groups': ["PG" + userEmail],
+        }
+      );
+
+      _store.collection('groups').doc("PG" + userEmail).set(
+          {
+            'users': userEmail,
+            'groupName': displayName + "'s tasks",
+            'createdAt': "",
+          }
+      );
+    }
+  }
   // Future signInWithGoogle() async {
   //   final googleUser = await googleSignIn.signIn();
   //   if (googleUser == null) return;

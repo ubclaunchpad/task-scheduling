@@ -41,23 +41,6 @@ class LoginAuthentication extends StatelessWidget {
 
   final void Function(BuildContext context) signInWithGoogle;
   final void Function() cancelLogin;
-
-  // final void Function(
-  //     String email,
-  //     String password,
-  //     void Function(Exception e) error,
-  //     ) signInWithEmail;
-  //
-
-  // final void Function() startEmailLogin;
-
-  // final void Function(
-  //     String email,
-  //     String displayName,
-  //     String password,
-  //     void Function(Exception e) error,
-  //     ) registerAccount;
-
   final void Function() signOut;
 
   @override
@@ -116,7 +99,6 @@ class LoginAuthentication extends StatelessWidget {
                 const Text(
                   'You\'re in ! \nProceed to Home Page'
                 )
-
             )
         );
       // case AuthState.loginWithGoogle:
