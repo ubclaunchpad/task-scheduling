@@ -36,14 +36,15 @@ class InteractiveTask<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    dynamic data = ds!.data();
     return Dismissible(
       onDismissed: (direction) => dismissItem(direction),
       key: UniqueKey(),
       child: Task(
-          title: ds!.data()["title"].toString(),
-          description: ds!.data()["description"].toString() +
+          title: data["title"].toString(),
+          description: data["description"].toString() +
               "  [status " +
-              ds!.data()["status"].toString() +
+              data["status"].toString() +
               "]",
           ds: ds),
       background: buildSwipeActionLeft(),
