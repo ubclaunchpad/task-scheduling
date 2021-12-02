@@ -21,6 +21,7 @@ class InteractiveTask<T> extends StatelessWidget {
   void completeTask() {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
     CollectionReference tasks = firestore.collection('testingTaskCollection');
+
     ds!.reference.update({"status": "complete"});
   }
 
@@ -41,10 +42,7 @@ class InteractiveTask<T> extends StatelessWidget {
       key: UniqueKey(),
       child: Task(
           title: ds!.data()["title"].toString(),
-          description: ds!.data()["description"].toString() +
-              "  [status " +
-              ds!.data()["status"].toString() +
-              "]",
+          description: ds!.data()["description"].toString(),
           ds: ds),
       background: buildSwipeActionLeft(),
       secondaryBackground: buildSwipeActionRight(),

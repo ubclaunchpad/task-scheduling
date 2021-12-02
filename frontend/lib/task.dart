@@ -50,6 +50,7 @@ class _Task extends State<Task> {
           height: 100,
           child: Column(
             children: [
+              status(),
               Stack(children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -96,5 +97,40 @@ class _Task extends State<Task> {
     } else {
       return const Center();
     }
+  }
+
+  Widget status() {
+    BorderRadiusGeometry radius = const BorderRadius.only(
+        //bottomLeft: Radius.circular(10.0),
+        // topRight: Radius.circular(50.0),
+        //bottomRight: Radius.circular(10.0),
+        );
+    bool isComplete = widget.ds!.data()["status"].toString() == "complete";
+    return Align(
+      alignment: Alignment.center,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: radius,
+              color: isComplete ? Colors.green.shade300 : Colors.grey.shade300,
+            ),
+            padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+            margin: const EdgeInsets.only(
+              bottom: 2.0,
+            ),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                widget.ds!.data()["status"].toString(),
+                style:
+                    const TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
