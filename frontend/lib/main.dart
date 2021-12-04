@@ -1,14 +1,19 @@
-import 'package:flutter/material.dart';
+import 'dart:developer';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:flutter/material.dart';
 import 'package:src/task.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:src/widgets/interactive_task.dart';
 import 'package:src/widgets/new_task_panel.dart';
+import 'package:src/widgets/stream_task_list.dart';
 
-void main() {
+void main() async {
+  // FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const TaskScheduler());
+  await Firebase.initializeApp();
+  // FirebaseFunctions.instance.useFunctionsEmulator('localhost', 5001);
+  runApp(TaskScheduler());
 }
 
 class TaskScheduler extends StatelessWidget {
@@ -42,9 +47,6 @@ class _MyHomePageState extends State<MyHomePage> {
   // Define an async function to initialize FlutterFire
   void initializeFlutterFire() async {
     try {
-      // Wait for Firebase to initialize and set `_initialized` state to true
-      await Firebase.initializeApp();
-
       setState(() {
         _initialized = true;
       });
@@ -134,29 +136,8 @@ class _MyHomePageState extends State<MyHomePage> {
             children: [
               Container(
                 margin: const EdgeInsets.only(top: 20),
-                child: Column(children: [
-                  FutureBuilder(
-                      future: tasks.get(),
-                      builder: (_, AsyncSnapshot snapshot) {
-                        return snapshot.hasData
-                            ? Column(children: [
-                                Container(
-                                    height: MediaQuery.of(context).size.height *
-                                        0.8,
-                                    child: ListView.builder(
-                                        padding: const EdgeInsets.all(4.0),
-                                        itemCount: snapshot.data.docs.length,
-                                        reverse: false,
-                                        itemBuilder: (context, index) {
-                                          DocumentSnapshot ds =
-                                              snapshot.data.docs[index];
-                                          return InteractiveTask(ds: ds);
-                                        })),
-                              ])
-                            : const Text("NOT CONNECTED TO DATABASE");
-                      }),
-                ]),
-              ),
+                child: StreamTaskList(),
+              )
             ],
           )),
     );
