@@ -1,10 +1,11 @@
 import 'dart:developer';
-
+import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:flutter/material.dart';
 import 'package:src/task.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:src/widgets/interactive_task.dart';
+import 'package:src/widgets/new_task_panel.dart';
 import 'package:src/widgets/stream_task_list.dart';
 
 void main() async {
@@ -41,14 +42,11 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   bool _initialized = false;
   bool _error = false;
-  bool _toAdd = true;
+  bool _toAdd = false;
 
   // Define an async function to initialize FlutterFire
   void initializeFlutterFire() async {
     try {
-      // Wait for Firebase to initialize and set `_initialized` state to true
-      // await Firebase.initializeApp();
-
       setState(() {
         _initialized = true;
       });
@@ -85,87 +83,63 @@ class _MyHomePageState extends State<MyHomePage> {
       );
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        bottom: PreferredSize(
-            child: Container(
-              color: Colors.grey,
-              height: 0.5,
-            ),
-            preferredSize: const Size.fromHeight(7.0)),
-
-        titleSpacing: 10,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: const Align(
-          alignment: Alignment.centerLeft,
-          child: Text(
-            "Inbox",
-            style: TextStyle(
-                fontWeight: FontWeight.bold, fontSize: 24, color: Colors.black),
-          ),
-        ),
-        backgroundColor: Colors.white,
-      ),
-      body: Stack(
-        children: [
-          Container(
-            margin: const EdgeInsets.only(top: 20),
-            child: StreamTaskList(),
-          ),
-
-          if (_toAdd)
-            Positioned.fill(
-                child: Align(
-                    alignment: Alignment.topCenter,
-                    child: Container(
-                      height: MediaQuery.of(context).size.height,
-                      width: MediaQuery.of(context).size.width,
-                      child: Task(title: "title", description: "description"),
-                      color: Color.fromRGBO(173, 173, 173, 0.9),
-                      padding: EdgeInsets.all(5),
-                    ))),
-          // if (_toAdd)
-          //   Positioned(
-          //     top: 30,
-          //     child: Container(
-          //       height: MediaQuery.of(context).size.height * 0.2,
-          //       width: MediaQuery.of(context).size.width,
-          //       color: Color(0xD4C3C3),
-          //       padding: EdgeInsets.all(10),
-          //       child: Task(title: "title", description: "descrription"),
-          //     ),
-          //   ),
-          // Can be replaced with a custom  widget to add task
-          // Positioned.fill(
-          //   child: Align(
-          //     alignment: Alignment.centerRight,
-          //     child: Task(title: "title", description: "description"),
-          //   ),
-          // ),
-          Positioned(
-              right: 10,
-              bottom: 10,
-              child: FloatingActionButton(
-                child: Icon(Icons.add),
-                onPressed: () {
-                  addTask();
-                },
-              ))
-        ],
-      ),
+    BorderRadiusGeometry radius = const BorderRadius.only(
+      topLeft: Radius.circular(24.0),
+      topRight: Radius.circular(24.0),
     );
-  }
+    return SlidingUpPanel(
+      minHeight: 80,
+      borderRadius: radius,
+      backdropEnabled: true,
+      panel: NewTaskPanel(),
+      collapsed: Scaffold(
+          backgroundColor: Colors.transparent,
+          body: Container(
+            decoration: BoxDecoration(
+                color: Colors.grey.shade400, borderRadius: radius),
+            child: Center(
+              child: Text(
+                "Swipe up to create a task",
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+          )),
+      body: Scaffold(
+          appBar: AppBar(
+            elevation: 0,
+            bottom: PreferredSize(
+                child: Container(
+                  color: Colors.grey,
+                  height: 0.5,
+                ),
+                preferredSize: const Size.fromHeight(7.0)),
 
-  Widget _buildPopupDialog(BuildContext context) {
-    return new AlertDialog(
-      content: new Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[Task(title: "title", description: "description")],
-      ),
-      actions: <Widget>[Text("add")],
+            titleSpacing: 10,
+            // Here we take the value from the MyHomePage object that was created by
+            // the App.build method, and use it to set our appbar title.
+            title: const Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                "Inbox",
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24,
+                    color: Colors.black),
+              ),
+            ),
+            backgroundColor: Colors.white,
+          ),
+          body: Stack(
+            children: [
+              Container(
+                margin: const EdgeInsets.only(top: 20),
+                child: StreamTaskList(),
+              )
+            ],
+          )),
     );
   }
 }
