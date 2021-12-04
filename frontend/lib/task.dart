@@ -26,11 +26,11 @@ class _Task extends State<Task> {
 
   @override
   Widget build(BuildContext context) {
-    String due = "new";
+    String due = "";
     dynamic? data = widget.ds?.data();
     if (data == Null) return Container();
     try {
-      DateTime date = DateTime.parse(data.dueDate.toDate().toString());
+      DateTime date = DateTime.parse(data["dueDate"].toDate().toString());
       due = "Due " + formatDate(date, [M, ' ', d]);
     } catch (e) {}
 
