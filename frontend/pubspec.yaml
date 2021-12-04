@@ -42,8 +42,7 @@ dependencies:
     flutter_signin_button: ^2.0.0
     intl: ^0.17.0
     get: ^4.3.8
-
-
+    date_format: ^2.0.4
 
 dev_dependencies:
   flutter_test:
