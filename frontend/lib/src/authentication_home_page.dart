@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:lp_task_scheduler/src/task_main_page.dart';
+import 'package:lp_task_scheduler/styles/font_styles.dart';
 import 'package:provider/provider.dart';
 import '../main.dart';
 import 'dashboard_home.dart';
@@ -135,8 +137,7 @@ class LoginState extends ChangeNotifier {
       _authState = AuthState.loggedIn;
       initUser(_userID, _userEmail, _displayName, _imageURL);
       Navigator.push(context, MaterialPageRoute(builder: (context) =>
-          Dashboard(userID: userID, displayName: displayName, userEmail:
-          userEmail, imageURL: imageURL)));
+          TaskPage(title: "Task Page")));
     } else {
       _authState = AuthState.loggedOut;
     }

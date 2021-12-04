@@ -32,67 +32,44 @@ class TaskScheduler extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blueGrey,
       ),
-      home: const MyHomePage(title: 'Authentication Demo Home Page'),
+      home: const LoginPage(),
     );
   }
 }
 
-class MyHomePage extends StatelessWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
+// class MyHomePage extends StatelessWidget {
+//   const MyHomePage({Key? key, required this.title}) : super(key: key);
+//
+//   final String title;
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//
+//         title: Text(title),
+//       ),
+//       body: Center(
+//         child: Column(
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: <Widget>[
+//         OutlinedButton(
+//           onPressed: () {
+//             Navigator.push(
+//               context,
+//               MaterialPageRoute(builder: (context) => const LoginPage()),
+//             );
+//           },
+//           child:
+//             const Text(
+//             'Please Click to Login',
+//           )
+//         ),
+//           ],
+//         ),
+//       ), // This trailing comma makes auto-formatting nicer for build methods.
+//     );
+//   }
+// }
 
-  final String title;
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-
-        title: Text(title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-        OutlinedButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const LoginPage()),
-            );
-          },
-          child:
-            const Text(
-            'Please Click to Login',
-          )
-        ),
-          ],
-        ),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
-  }
-}
-
-TextStyle mainStyle = const TextStyle(
-    fontFamily: 'SF Pro',
-    color: Colors.black,
-    fontSize: 14,
-    height: 0.5,
-    fontWeight: FontWeight.w400
-);
-
-TextStyle linkStyle = const TextStyle(
-    fontFamily: 'SF Pro',
-    color: Color.fromRGBO(29, 56, 80, 1.0),
-    fontSize: 14,
-    height: 0.5,
-    fontWeight: FontWeight.w400
-);
-
-TextStyle boldStyle = const TextStyle(
-    fontFamily: 'SF Pro',
-    color: Colors.black,
-    fontSize: 14,
-    height: 0.5,
-    fontWeight: FontWeight.w800
-);
-// Color(0x004b8ecb)

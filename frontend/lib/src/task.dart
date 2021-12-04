@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:src/widgets/interactive_task.dart';
+import '../widgets/interactive_task.dart';
 import 'package:date_format/date_format.dart';
 import 'dart:collection';
 

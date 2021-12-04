@@ -1,3 +1,5 @@
+import 'package:lp_task_scheduler/styles/font_styles.dart';
+
 import 'dashboard_home.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
