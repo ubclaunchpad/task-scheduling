@@ -141,7 +141,6 @@ class LoginState extends ChangeNotifier {
     } else {
       _authState = AuthState.loggedOut;
     }
-
     // notifyListeners();
     //print(user);
   }
