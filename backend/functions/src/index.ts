@@ -166,7 +166,7 @@ export const createUser = functions.https
                 response.status(400).send("ID is required.");
                 return;
               }
-        const newUser = getTaskFromRequest(request);
+        const newUser = getUserFromRequest(request);
         if (!newUser.userName || !newUser.userEmail || !newUser.userProfileURL) {
             response.status(400).send("Incomplete request for new user");
             return;
