@@ -112,8 +112,18 @@ export const updateTask = functions.https.onRequest(
     } catch (e) {
       response.status(500).send(e);
     }
+<<<<<<< HEAD
   }
 );
+=======
+    );
+
+export const addTask = functions.https
+    .onRequest(async (request, response) => {
+      
+    } );
+
+>>>>>>> 478888f (Added the addTask function)
 
 export const deleteTask = functions.https.onRequest(
   async (request, response) => {
