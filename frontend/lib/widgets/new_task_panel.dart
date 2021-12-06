@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:src/task.dart';
+import 'package:lp_task_scheduler/src/task.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:src/widgets/interactive_task.dart';
+import 'interactive_task.dart';
 
 // Define a custom Form widget.
 class NewTaskPanel extends StatefulWidget {
