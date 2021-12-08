@@ -35,6 +35,20 @@ class InteractiveTask<T> extends StatelessWidget {
     }
   }
 
+  void addUserToGroup(Text emailId, Text groupId) {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    CollectionReference users = firestore.collection('users');
+    CollectionReference groups = firestore.collection('groups');
+    db.collection('users').get().then(funtion(querySnapshot) {
+    querySnapshot.forEach(function(doc) {
+        if (emailId != doc.email){
+          users.add(emailId);
+        } else {
+          groups.add(emailId);
+        }
+      });
+    });
+
   @override
   Widget build(BuildContext context) {
     dynamic data = ds!.data();
