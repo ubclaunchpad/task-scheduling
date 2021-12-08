@@ -1,7 +1,19 @@
+import 'dart:developer';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:flutter/material.dart';
+import 'package:src/task.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:src/widgets/interactive_task.dart';
+import 'package:src/widgets/new_task_panel.dart';
+import 'package:src/widgets/stream_task_list.dart';
 
-void main() {
-  runApp(const TaskScheduler());
+void main() async {
+  // FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  // FirebaseFunctions.instance.useFunctionsEmulator('localhost', 5001);
+  runApp(TaskScheduler());
 }
 
 class TaskScheduler extends StatelessWidget {
@@ -11,35 +23,15 @@ class TaskScheduler extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.green,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      title: 'Tasks',
+      theme: ThemeData(primarySwatch: Colors.pink),
+      home: const MyHomePage(title: 'Tasks'),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
 
   final String title;
 
@@ -48,68 +40,106 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  bool _initialized = false;
+  bool _error = false;
+  bool _toAdd = false;
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
+  // Define an async function to initialize FlutterFire
+  void initializeFlutterFire() async {
+    try {
+      setState(() {
+        _initialized = true;
+      });
+    } catch (e) {
+      setState(() {
+        _error = true;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    initializeFlutterFire();
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    CollectionReference tasks = firestore.collection('testingTaskCollection');
+
+    void addTask() {
+      setState(() {
+        _toAdd = !_toAdd;
+      });
+    }
+
+    if (!_initialized) {
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text("NOT CONNECTED TO FIREBASE"),
+          backgroundColor: Color(0xff885566),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      );
+    }
+
+    BorderRadiusGeometry radius = const BorderRadius.only(
+      topLeft: Radius.circular(24.0),
+      topRight: Radius.circular(24.0),
+    );
+    return SlidingUpPanel(
+      minHeight: 80,
+      borderRadius: radius,
+      backdropEnabled: true,
+      panel: NewTaskPanel(),
+      collapsed: Scaffold(
+          backgroundColor: Colors.transparent,
+          body: Container(
+            decoration: BoxDecoration(
+                color: Colors.grey.shade400, borderRadius: radius),
+            child: Center(
+              child: Text(
+                "Swipe up to create a task",
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+          )),
+      body: Scaffold(
+          appBar: AppBar(
+            elevation: 0,
+            bottom: PreferredSize(
+                child: Container(
+                  color: Colors.grey,
+                  height: 0.5,
+                ),
+                preferredSize: const Size.fromHeight(7.0)),
+
+            titleSpacing: 10,
+            // Here we take the value from the MyHomePage object that was created by
+            // the App.build method, and use it to set our appbar title.
+            title: const Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                "Inbox",
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24,
+                    color: Colors.black),
+              ),
+            ),
+            backgroundColor: Colors.white,
+          ),
+          body: Stack(
+            children: [
+              Container(
+                margin: const EdgeInsets.only(top: 20),
+                child: StreamTaskList(),
+              )
+            ],
+          )),
     );
   }
 }
