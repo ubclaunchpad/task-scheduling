@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:src/task.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:src/widgets/interactive_group.dart';
 import 'package:src/widgets/interactive_task.dart';
 import 'package:src/widgets/new_task_panel.dart';
 import 'package:src/widgets/stream_task_list.dart';
@@ -134,10 +135,11 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           body: Stack(
             children: [
-              Container(
-                margin: const EdgeInsets.only(top: 20),
-                child: StreamTaskList(),
-              )
+              // Container(
+              //   margin: const EdgeInsets.only(top: 20),
+              //   child: StreamTaskList(),
+              // )
+              InteractiveGroup(),
             ],
           )),
     );

@@ -112,18 +112,71 @@ export const updateTask = functions.https.onRequest(
     } catch (e) {
       response.status(500).send(e);
     }
-<<<<<<< HEAD
-  }
-);
-=======
     );
 
-export const addTask = functions.https
+    /**
+     * On Success: yet to test
+     * On Failure: Returns 400 Response (Bad Request)
+     */
+export const addGroupTask = functions.https
     .onRequest(async (request, response) => {
+      const groupTask = {...getTaskFromRequest(request),
+        createdAt: new Date().toISOString(),
+      };
       
+      if (!groupTask.title || !groupTask.creator) {
+        response.status(400).send("Title is required.");
+        return;
+      }
+      
+      try {
+        const ref = await admin.firestore().collection("tasks").add(task);
+        response.send(ref.id);
+      } catch (e) {
+        response.status(500).send(e);
+      }
     } );
 
->>>>>>> 478888f (Added the addTask function)
+    /**
+     * On Sucess: yet to test
+     * On Failure: Returns 400 Response (Bad Request)
+     */
+    export const readGroupTask = functions.https
+    .onRequest(async (request, response) => {
+      const id = request.query.id as string;
+      if (!id || typeof id !== "string") {
+        response.status(400).send("ID is required.");
+        return;
+      }
+      try {
+        const ref = await admin.firestore().collection("groups").doc(id).get();
+        response.send(ref.data());
+      } catch (e) {
+        response.status(500).send(e);
+      }
+    }
+    );
+
+    /**
+     * On Sucess: yet to test
+     * On Failure: Returns 400 Response (Bad Request)
+     */
+    export const deleteGroupTask = functions.https
+    .onRequest(async (request, response) => {
+      const id = request.query.id as string;
+      if (!id || typeof id !== "string") {
+        response.status(400).send("ID is required.");
+        return;
+      }
+      try {
+        const ref = await admin.firestore().collection("groups").doc(id);
+        await ref.delete();
+        response.send("ok");
+      } catch (e) {
+        response.status(500).send(e);
+      }
+    }
+    );
 
 export const deleteTask = functions.https.onRequest(
   async (request, response) => {
