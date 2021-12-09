@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -7,8 +6,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'interactive_task.dart';
 
 class StreamTaskList extends StatefulWidget {
-  StreamTaskList({Key? key}) : super(key: key);
-
+  StreamTaskList({Key? key, required this.id}) : super(key: key);
+  final String id;
   @override
   _StreamTaskListState createState() => _StreamTaskListState();
 }
@@ -19,7 +18,9 @@ class _StreamTaskListState extends State<StreamTaskList> {
   Widget build(BuildContext context) {
     return StreamBuilder(
         stream: FirebaseFirestore.instance
-            .collection('testingTaskCollection')
+            .collection("groups")
+            .doc(widget.id)
+            .collection("Tasks")
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasError) {
@@ -32,13 +33,16 @@ class _StreamTaskListState extends State<StreamTaskList> {
               heightFactor: 1,
             );
           }
-          return ListView(
-            padding: const EdgeInsets.all(4.0),
-            children: snapshot.data!.docs.map((DocumentSnapshot document) {
-              return InteractiveTask(
-                ds: document,
-              );
-            }).toList(),
+          return Container(
+            width: MediaQuery.of(context).size.width,
+            child: ListView(
+              children: snapshot.data!.docs.map((DocumentSnapshot document) {
+                return InteractiveTask(
+                  ds: document,
+                  id: widget.id,
+                );
+              }).toList(),
+            ),
           );
         });
   }

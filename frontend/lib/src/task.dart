@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:src/task.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:src/widgets/interactive_task.dart';
+import '../widgets/interactive_task.dart';
 import 'package:date_format/date_format.dart';
 import 'dart:collection';
 
@@ -37,10 +35,10 @@ class _Task extends State<Task> {
     return Center(
       child: Container(
         margin: const EdgeInsets.all(0.0),
-        padding: const EdgeInsets.all(0.0),
+        padding: const EdgeInsets.all(10.0),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
-          color: widget.ds != null ? Colors.white : Colors.white,
+          color: widget.ds != null ? Colors.transparent : Colors.transparent,
         ),
         width: MediaQuery.of(context).size.width,
         height: 100,
