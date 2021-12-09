@@ -53,7 +53,7 @@ class _InvitePanel extends State<InvitePanel> {
               padding: const EdgeInsets.only(
                   top: 20.0, left: 20, right: 20, bottom: 10),
               child: Text(
-                "Invite by email",
+                "Users",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
@@ -100,12 +100,22 @@ class _InvitePanel extends State<InvitePanel> {
               ),
             ),
             Container(
+              padding: const EdgeInsets.only(
+                  top: 1.0, left: 20, right: 20, bottom: 10),
+              child: Text(
+                "Invite by email",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                ),
+              ),
+            ),
+            Container(
               width: MediaQuery.of(context).size.width,
               //color: Colors.red,
-              margin: const EdgeInsets.only(
-                  top: 20.0, left: 10, right: 10, bottom: 10),
+
               padding: const EdgeInsets.only(
-                  top: 10.0, left: 20, right: 20, bottom: 10),
+                  top: 5.0, left: 20, right: 20, bottom: 10),
 
               // height: MediaQuery.of(context).size.height * 0.09,
               child: Align(

@@ -20,7 +20,6 @@ class TaskScheduler extends StatelessWidget {
       title: 'Index',
       theme: ThemeData(
           primaryColor: Color.fromRGBO(255, 244, 208, 1.0),
-          buttonColor: Color.fromRGBO(255, 244, 208, 1.0),
           primarySwatch: Colors.deepOrange),
       home: const LoginPage(),
     );

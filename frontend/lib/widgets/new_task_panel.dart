@@ -21,7 +21,7 @@ class _TaskPanel extends State<NewTaskPanel> {
   // of the TextField.
   final myController = TextEditingController();
   final description = TextEditingController();
-  bool _showDate = true;
+  bool _showDate = false;
   DateTime selectedDate = DateTime.now();
   @override
   void dispose() {
@@ -59,13 +59,10 @@ class _TaskPanel extends State<NewTaskPanel> {
     }
 
     return Row(
-      mainAxisAlignment:
-          kIsWeb ? MainAxisAlignment.end : MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
-          width: kIsWeb
-              ? MediaQuery.of(context).size.width / 3
-              : MediaQuery.of(context).size.width,
+          width: MediaQuery.of(context).size.width,
 
           decoration: new BoxDecoration(
             borderRadius: kIsWeb ? BorderRadius.all(Radius.zero) : radius,
