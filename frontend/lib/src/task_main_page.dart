@@ -33,7 +33,8 @@ class _MyTaskPageState extends State<TaskPage> {
 
   PanelOptions panelOption = PanelOptions.DEFAULT;
   final PanelController panelController = PanelController();
-
+  String groupId = "";
+  String name = "";
   // Define an async function to initialize FlutterFire
   void initializeFlutterFire() async {
     try {
@@ -49,14 +50,30 @@ class _MyTaskPageState extends State<TaskPage> {
 
   @override
   void initState() {
+    groupId = widget.id;
+    name = widget.title;
     initializeFlutterFire();
+
     super.initState();
+  }
+
+  setId(String newId, String name) {
+    setState(() {
+      groupId = newId;
+      if (name == widget.user.email) {
+        this.name = "Personal";
+      } else {
+        this.name = name;
+      }
+
+      print(name);
+    });
   }
 
   Widget panel(String id) {
     switch (panelOption) {
       case PanelOptions.GROUPS:
-        return GroupPanel();
+        return GroupPanel(id: id, userid: widget.user.email!, change: setId);
       case PanelOptions.INVITE:
         return InvitePanel(id: id);
       default:
@@ -72,8 +89,7 @@ class _MyTaskPageState extends State<TaskPage> {
   @override
   Widget build(BuildContext context) {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
-    String id = widget.id;
-    String name = widget.title;
+    String id = groupId;
 
     if (!_initialized) {
       return Scaffold(
@@ -88,228 +104,203 @@ class _MyTaskPageState extends State<TaskPage> {
       topLeft: Radius.circular(24.0),
       topRight: Radius.circular(24.0),
     );
-    return kIsWeb
-        ? Scaffold(
-            body: Container(
-                width: MediaQuery.of(context).size.width,
-                child: //NewTaskPanel(),
-                    Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Scaffold(
+      body: Container(
+        child: SlidingUpPanel(
+          onPanelClosed: () {
+            setState(() {
+              panelOption = PanelOptions.DEFAULT;
+            });
+          },
+          controller: panelController,
+          defaultPanelState: PanelState.CLOSED,
+          renderPanelSheet: false,
+          color: Colors.transparent,
+          minHeight: 80,
+          borderRadius: radius,
+          backdropEnabled: false,
+          panel: panel(id),
+          collapsed: Scaffold(
+              backgroundColor: Colors.transparent,
+              body: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    width: MediaQuery.of(context).size.width > 500
+                        ? 500
+                        : MediaQuery.of(context).size.width,
+                    decoration: BoxDecoration(
+                      color: Color.fromRGBO(247, 227, 218, 1.0),
+                      borderRadius: radius,
+                    ),
+                    child: const Center(
+                      child: Text(
+                        "Swipe up to create a task",
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                ],
+              )),
+          body: Scaffold(
+              appBar: AppBar(
+                elevation: 0,
+                bottom: PreferredSize(
+                    child: Container(
+                      color: Colors.grey,
+                      height: 0.5,
+                    ),
+                    preferredSize: const Size.fromHeight(10.0)),
+
+                // Here we take the value from the MyHomePage object that was created by
+                // the App.build method, and use it to set our appbar title.
+                title: Stack(
                   children: [
-                    StreamTaskList(id: widget.id),
-                    panel(widget.id),
-                  ],
-                )),
-          )
-        : Scaffold(
-            body: Container(
-              child: SlidingUpPanel(
-                onPanelClosed: () {
-                  setState(() {
-                    panelOption = PanelOptions.DEFAULT;
-                  });
-                },
-                controller: panelController,
-                defaultPanelState: PanelState.CLOSED,
-                renderPanelSheet: false,
-                color: Colors.transparent,
-                minHeight:
-                    kIsWeb ? MediaQuery.of(context).size.height * 0.8 : 80,
-                borderRadius: radius,
-                backdropEnabled: false,
-                panel: panel(id),
-                collapsed: Scaffold(
-                    backgroundColor: Colors.transparent,
-                    body: Row(
-                      mainAxisAlignment: kIsWeb
-                          ? MainAxisAlignment.end
-                          : MainAxisAlignment.center,
+                    Column(
                       children: [
-                        Container(
-                          width: MediaQuery.of(context).size.width > 500
-                              ? 500
-                              : MediaQuery.of(context).size.width,
-                          decoration: BoxDecoration(
-                            color: Color.fromRGBO(247, 227, 218, 1.0),
-                            borderRadius:
-                                kIsWeb ? BorderRadius.all(Radius.zero) : radius,
-                          ),
-                          child: const Center(
-                            child: Text(
-                              "Swipe up to create a task",
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              padding: EdgeInsets.only(left: 3, right: 3),
+                              decoration: BoxDecoration(
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(10)),
+                                  color: panelOption == PanelOptions.GROUPS
+                                      ? Color.fromRGBO(255, 244, 208, 1.0)
+                                      : Colors.transparent),
+                              child: TextButton.icon(
+                                onPressed: () {
+                                  setState(() {
+                                    if (panelOption != PanelOptions.GROUPS) {
+                                      panelOption = PanelOptions.GROUPS;
+                                      panelController.open();
+                                    } else {
+                                      panelOption = PanelOptions.DEFAULT;
+                                      panelController.close();
+                                    }
+                                  });
+                                },
+                                label: Text(name,
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 22,
+                                        color: Colors.black)),
+                                icon: Icon(Icons.switch_left_rounded),
+                              ),
+                              // FutureBuilder<String>(
+                              //   future: findGroupName(firestore
+                              //       .collection("groups")
+                              //       .doc(
+                              //           id)), // a Future<String> or null
+                              //   builder: (BuildContext context,
+                              //       AsyncSnapshot<String> snapshot) {
+                              //     switch (snapshot.connectionState) {
+                              //       case ConnectionState.none:
+                              //         return new Text(
+                              //             'Press button to start');
+                              //       case ConnectionState.waiting:
+                              //         return new Text(
+                              //             'Awaiting result...');
+                              //       default:
+                              //         if (snapshot.hasError)
+                              //           return new Text(
+                              //               'Error: ${snapshot.error}');
+                              //         else
+                              //           return new TextButton.icon(
+                              //             onPressed: () {
+                              //               setState(() {
+                              //                 if (panelOption !=
+                              //                     PanelOptions.GROUPS) {
+                              //                   panelOption =
+                              //                       PanelOptions.GROUPS;
+                              //                   panelController.open();
+                              //                 } else {
+                              //                   panelOption =
+                              //                       PanelOptions
+                              //                           .DEFAULT;
+                              //                   panelController.close();
+                              //                 }
+                              //               });
+                              //             },
+                              //             label: Text(snapshot.data!,
+                              //                 style: TextStyle(
+                              //                     fontWeight:
+                              //                         FontWeight.bold,
+                              //                     fontSize: 22,
+                              //                     color: Colors.black)),
+                              //             icon: Icon(Icons
+                              //                 .switch_left_rounded),
+                              //           );
+                              //     }
+                              //   },
+                              // )
                             ),
-                          ),
+                            Container(
+                              width: 60,
+                              padding: EdgeInsets.zero,
+                              decoration: BoxDecoration(
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(10)),
+                                  color: panelOption == PanelOptions.INVITE
+                                      ? Color.fromRGBO(255, 244, 208, 1.0)
+                                      : Colors.transparent),
+                              child: TextButton.icon(
+                                  onPressed: () {
+                                    setState(() {
+                                      if (panelOption != PanelOptions.INVITE) {
+                                        panelOption = PanelOptions.INVITE;
+                                        panelController.open();
+                                      } else {
+                                        panelOption = PanelOptions.DEFAULT;
+                                        panelController.close();
+                                      }
+                                    });
+                                  },
+                                  label: Text(""),
+                                  icon: const Icon(
+                                    Icons.group_add_outlined,
+                                    size: 20,
+                                  )),
+                            ),
+                          ],
                         ),
                       ],
-                    )),
-                body: Scaffold(
-                    appBar: AppBar(
-                      elevation: 0,
-                      bottom: PreferredSize(
-                          child: Container(
-                            color: Colors.grey,
-                            height: 0.5,
-                          ),
-                          preferredSize: const Size.fromHeight(10.0)),
+                    )
+                  ],
+                ),
 
-                      // Here we take the value from the MyHomePage object that was created by
-                      // the App.build method, and use it to set our appbar title.
-                      title: Stack(
-                        children: [
-                          Column(
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Container(
-                                    padding: EdgeInsets.only(left: 3, right: 3),
-                                    decoration: BoxDecoration(
-                                        borderRadius: const BorderRadius.all(
-                                            Radius.circular(10)),
-                                        color: panelOption ==
-                                                PanelOptions.GROUPS
-                                            ? Color.fromRGBO(255, 244, 208, 1.0)
-                                            : Colors.transparent),
-                                    child: TextButton.icon(
-                                      onPressed: () {
-                                        setState(() {
-                                          if (panelOption !=
-                                              PanelOptions.GROUPS) {
-                                            panelOption = PanelOptions.GROUPS;
-                                            panelController.open();
-                                          } else {
-                                            panelOption = PanelOptions.DEFAULT;
-                                            panelController.close();
-                                          }
-                                        });
-                                      },
-                                      label: Text("Personal",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 22,
-                                              color: Colors.black)),
-                                      icon: Icon(Icons.switch_left_rounded),
-                                    ),
-                                    // FutureBuilder<String>(
-                                    //   future: findGroupName(firestore
-                                    //       .collection("groups")
-                                    //       .doc(
-                                    //           id)), // a Future<String> or null
-                                    //   builder: (BuildContext context,
-                                    //       AsyncSnapshot<String> snapshot) {
-                                    //     switch (snapshot.connectionState) {
-                                    //       case ConnectionState.none:
-                                    //         return new Text(
-                                    //             'Press button to start');
-                                    //       case ConnectionState.waiting:
-                                    //         return new Text(
-                                    //             'Awaiting result...');
-                                    //       default:
-                                    //         if (snapshot.hasError)
-                                    //           return new Text(
-                                    //               'Error: ${snapshot.error}');
-                                    //         else
-                                    //           return new TextButton.icon(
-                                    //             onPressed: () {
-                                    //               setState(() {
-                                    //                 if (panelOption !=
-                                    //                     PanelOptions.GROUPS) {
-                                    //                   panelOption =
-                                    //                       PanelOptions.GROUPS;
-                                    //                   panelController.open();
-                                    //                 } else {
-                                    //                   panelOption =
-                                    //                       PanelOptions
-                                    //                           .DEFAULT;
-                                    //                   panelController.close();
-                                    //                 }
-                                    //               });
-                                    //             },
-                                    //             label: Text(snapshot.data!,
-                                    //                 style: TextStyle(
-                                    //                     fontWeight:
-                                    //                         FontWeight.bold,
-                                    //                     fontSize: 22,
-                                    //                     color: Colors.black)),
-                                    //             icon: Icon(Icons
-                                    //                 .switch_left_rounded),
-                                    //           );
-                                    //     }
-                                    //   },
-                                    // )
-                                  ),
-                                  Container(
-                                    width: 60,
-                                    padding: EdgeInsets.zero,
-                                    decoration: BoxDecoration(
-                                        borderRadius: const BorderRadius.all(
-                                            Radius.circular(10)),
-                                        color: panelOption ==
-                                                PanelOptions.INVITE
-                                            ? Color.fromRGBO(255, 244, 208, 1.0)
-                                            : Colors.transparent),
-                                    child: TextButton.icon(
-                                        onPressed: () {
-                                          setState(() {
-                                            if (panelOption !=
-                                                PanelOptions.INVITE) {
-                                              panelOption = PanelOptions.INVITE;
-                                              panelController.open();
-                                            } else {
-                                              panelOption =
-                                                  PanelOptions.DEFAULT;
-                                              panelController.close();
-                                            }
-                                          });
-                                        },
-                                        label: Text(""),
-                                        icon: const Icon(
-                                          Icons.group_add_outlined,
-                                          size: 20,
-                                        )),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
-
-                      backgroundColor: Colors.white,
-                    ),
-                    body: Stack(
+                backgroundColor: Colors.white,
+              ),
+              body: Stack(
+                children: [
+                  Container(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Container(
-                          child: Row(
-                            mainAxisAlignment: kIsWeb
-                                ? MainAxisAlignment.start
-                                : MainAxisAlignment.center,
+                          width: MediaQuery.of(context).size.width > 600
+                              ? 600
+                              : MediaQuery.of(context).size.width,
+                          child: Stack(
                             children: [
                               Container(
-                                width: MediaQuery.of(context).size.width > 600
-                                    ? 600
-                                    : MediaQuery.of(context).size.width,
-                                child: Stack(
-                                  children: [
-                                    Container(
-                                      margin: const EdgeInsets.only(top: 20),
-                                      child: StreamTaskList(id: id),
-                                    )
-                                  ],
-                                ),
-                              ),
+                                margin: const EdgeInsets.only(top: 20),
+                                child: StreamTaskList(id: id),
+                              )
                             ],
                           ),
                         ),
                       ],
-                    )),
-              ),
-            ),
-          );
+                    ),
+                  ),
+                ],
+              )),
+        ),
+      ),
+    );
   }
 }
