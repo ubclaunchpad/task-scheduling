@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:lp_task_scheduler/src/authentication_home_page.dart';
 import '../src/task.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -26,10 +28,18 @@ class _GroupPanel extends State<GroupPanel> {
     super.dispose();
   }
 
+
+
   Future<DocumentSnapshot> getGroups() {
     DocumentReference ref =
         FirebaseFirestore.instance.collection("users").doc(widget.userid);
     return ref.get();
+  }
+
+  void signOut() {
+    FirebaseAuth.instance.signOut();
+    Navigator.pushReplacement(context, MaterialPageRoute(builder:
+        (context) => const LoginPage()));
   }
 
   @override
@@ -189,7 +199,7 @@ class _GroupPanel extends State<GroupPanel> {
                           style: TextStyle(
                               color: Colors.black, fontWeight: FontWeight.bold),
                         ),
-                        onPressed: () => {},
+                        onPressed: () => signOut(),
                       ),
                     )),
               ),

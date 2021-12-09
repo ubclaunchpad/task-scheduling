@@ -74,14 +74,7 @@ class LoginPage extends StatelessWidget {
 
       User? user;
       GoogleAuthProvider authProvider = GoogleAuthProvider();
-
-      void signOut() {
-        FirebaseAuth.instance.signOut();
-        Navigator.pushReplacement(context, MaterialPageRoute(builder:
-            (context) => const LoginPage()));
-      }
-
-          try {
+      try {
         final UserCredential userCredential = await _auth.signInWithPopup(authProvider);
         user = userCredential.user;
       } catch(e) {
@@ -89,13 +82,13 @@ class LoginPage extends StatelessWidget {
       }
       if (user != null) {
         CollectionReference tasks = _store.collection(user.email!);
-        initUser(user.uid, user!.email!, user!.displayName!);
+        initUser(user.uid, user.email!, user.displayName!);
 
         Navigator.pushReplacement(context, MaterialPageRoute(builder:
             (context) =>
             TaskPage(
                 title: user!.displayName!,
-                user: user!,
+                user: user,
                 id: tasks.id)
         )
         );
