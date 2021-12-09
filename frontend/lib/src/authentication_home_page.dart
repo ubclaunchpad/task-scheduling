@@ -11,6 +11,11 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    FirebaseAuth _auth = FirebaseAuth.instance;
+    FirebaseFirestore _store = FirebaseFirestore.instance;
+
+
     Future<UserCredential> signInWithGoogle() async {
       // Trigger the authentication flow
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
@@ -24,8 +29,7 @@ class LoginPage extends StatelessWidget {
       );
       // Once signed in, return the UserCredential
       final ret = await FirebaseAuth.instance.signInWithCredential(credential);
-      FirebaseFirestore firestore = FirebaseFirestore.instance;
-      CollectionReference tasks = firestore.collection(ret.user!.email!);
+      CollectionReference tasks = _store.collection(ret.user!.email!);
 
       Navigator.pushReplacement(
           context,
@@ -36,6 +40,82 @@ class LoginPage extends StatelessWidget {
                   id: tasks.id)));
       return ret;
     }
+
+
+
+    Future<void> initUser(String userID, String
+    userEmail, String displayName)
+    async {
+      var doc = await _store.collection('users').doc(userEmail).get();
+      if (!doc.exists) {
+        _store.collection('users').doc(userEmail).set(
+            {
+              'name': displayName,
+              'email': userEmail,
+              'id': userID,
+              // use convention for id's e.g. PG (personal group) + personal
+              // email as id
+              'groups': ["PG" + userEmail],
+            }
+        );
+
+        _store.collection('groups').doc("PG" + userEmail).set(
+            {
+              'users': userEmail,
+              'groupName': displayName + "'s tasks",
+              'createdAt': "",
+            }
+        );
+      }
+    }
+
+
+    Future signInWithGooglePopUp() async {
+
+      User? user;
+      GoogleAuthProvider authProvider = GoogleAuthProvider();
+
+      void signOut() {
+        FirebaseAuth.instance.signOut();
+        Navigator.pushReplacement(context, MaterialPageRoute(builder:
+            (context) => const LoginPage()));
+      }
+
+          try {
+        final UserCredential userCredential = await _auth.signInWithPopup(authProvider);
+        user = userCredential.user;
+      } catch(e) {
+        print(e);
+      }
+      if (user != null) {
+        CollectionReference tasks = _store.collection(user.email!);
+        initUser(user.uid, user!.email!, user!.displayName!);
+
+        Navigator.pushReplacement(context, MaterialPageRoute(builder:
+            (context) =>
+            TaskPage(
+                title: user!.displayName!,
+                user: user!,
+                id: tasks.id)
+        )
+        );
+      }
+    }
+
+
+    _auth.userChanges().listen((user) {
+      if (user != null) {
+        CollectionReference tasks = _store.collection(user.email!);
+        Navigator.pushReplacement(context, MaterialPageRoute(builder:
+            (context) =>
+            TaskPage(
+                title: user.displayName!,
+                user: user,
+                id: tasks.id)
+        )
+        );
+      }
+    });
 
     return Container(
       decoration: const BoxDecoration(
@@ -65,7 +145,9 @@ class LoginPage extends StatelessWidget {
           margin: const EdgeInsets.fromLTRB(0, 180, 0, 0),
         ),
         TextButton.icon(
-          onPressed: () => signInWithGoogle(),
+          onPressed: () {
+            signInWithGooglePopUp();
+          },
           icon: const Icon(Icons.login),
           label: const Text('Sign in with Google'),
           style: ButtonStyle(
