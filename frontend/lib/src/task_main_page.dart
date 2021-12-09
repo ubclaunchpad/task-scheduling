@@ -60,7 +60,7 @@ class _MyTaskPageState extends State<TaskPage> {
       case PanelOptions.INVITE:
         return InvitePanel(id: id);
       default:
-        return NewTaskPanel();
+        return NewTaskPanel(id: id);
     }
   }
 
@@ -167,63 +167,82 @@ class _MyTaskPageState extends State<TaskPage> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Container(
-                                      padding:
-                                          EdgeInsets.only(left: 3, right: 3),
-                                      decoration: BoxDecoration(
-                                          borderRadius: const BorderRadius.all(
-                                              Radius.circular(10)),
-                                          color:
-                                              panelOption == PanelOptions.GROUPS
-                                                  ? Color.fromRGBO(
-                                                      255, 244, 208, 1.0)
-                                                  : Colors.transparent),
-                                      child: FutureBuilder<String>(
-                                        future: findGroupName(firestore
-                                            .collection("groups")
-                                            .doc(
-                                                id)), // a Future<String> or null
-                                        builder: (BuildContext context,
-                                            AsyncSnapshot<String> snapshot) {
-                                          switch (snapshot.connectionState) {
-                                            case ConnectionState.none:
-                                              return new Text(
-                                                  'Press button to start');
-                                            case ConnectionState.waiting:
-                                              return new Text(
-                                                  'Awaiting result...');
-                                            default:
-                                              if (snapshot.hasError)
-                                                return new Text(
-                                                    'Error: ${snapshot.error}');
-                                              else
-                                                return new TextButton.icon(
-                                                  onPressed: () {
-                                                    setState(() {
-                                                      if (panelOption !=
-                                                          PanelOptions.GROUPS) {
-                                                        panelOption =
-                                                            PanelOptions.GROUPS;
-                                                        panelController.open();
-                                                      } else {
-                                                        panelOption =
-                                                            PanelOptions
-                                                                .DEFAULT;
-                                                        panelController.close();
-                                                      }
-                                                    });
-                                                  },
-                                                  label: Text(snapshot.data!,
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 22,
-                                                          color: Colors.black)),
-                                                  icon: Icon(Icons
-                                                      .switch_left_rounded),
-                                                );
+                                    padding: EdgeInsets.only(left: 3, right: 3),
+                                    decoration: BoxDecoration(
+                                        borderRadius: const BorderRadius.all(
+                                            Radius.circular(10)),
+                                        color: panelOption ==
+                                                PanelOptions.GROUPS
+                                            ? Color.fromRGBO(255, 244, 208, 1.0)
+                                            : Colors.transparent),
+                                    child: TextButton.icon(
+                                      onPressed: () {
+                                        setState(() {
+                                          if (panelOption !=
+                                              PanelOptions.GROUPS) {
+                                            panelOption = PanelOptions.GROUPS;
+                                            panelController.open();
+                                          } else {
+                                            panelOption = PanelOptions.DEFAULT;
+                                            panelController.close();
                                           }
-                                        },
-                                      )),
+                                        });
+                                      },
+                                      label: Text("Personal",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 22,
+                                              color: Colors.black)),
+                                      icon: Icon(Icons.switch_left_rounded),
+                                    ),
+                                    // FutureBuilder<String>(
+                                    //   future: findGroupName(firestore
+                                    //       .collection("groups")
+                                    //       .doc(
+                                    //           id)), // a Future<String> or null
+                                    //   builder: (BuildContext context,
+                                    //       AsyncSnapshot<String> snapshot) {
+                                    //     switch (snapshot.connectionState) {
+                                    //       case ConnectionState.none:
+                                    //         return new Text(
+                                    //             'Press button to start');
+                                    //       case ConnectionState.waiting:
+                                    //         return new Text(
+                                    //             'Awaiting result...');
+                                    //       default:
+                                    //         if (snapshot.hasError)
+                                    //           return new Text(
+                                    //               'Error: ${snapshot.error}');
+                                    //         else
+                                    //           return new TextButton.icon(
+                                    //             onPressed: () {
+                                    //               setState(() {
+                                    //                 if (panelOption !=
+                                    //                     PanelOptions.GROUPS) {
+                                    //                   panelOption =
+                                    //                       PanelOptions.GROUPS;
+                                    //                   panelController.open();
+                                    //                 } else {
+                                    //                   panelOption =
+                                    //                       PanelOptions
+                                    //                           .DEFAULT;
+                                    //                   panelController.close();
+                                    //                 }
+                                    //               });
+                                    //             },
+                                    //             label: Text(snapshot.data!,
+                                    //                 style: TextStyle(
+                                    //                     fontWeight:
+                                    //                         FontWeight.bold,
+                                    //                     fontSize: 22,
+                                    //                     color: Colors.black)),
+                                    //             icon: Icon(Icons
+                                    //                 .switch_left_rounded),
+                                    //           );
+                                    //     }
+                                    //   },
+                                    // )
+                                  ),
                                   Container(
                                     width: 60,
                                     padding: EdgeInsets.zero,

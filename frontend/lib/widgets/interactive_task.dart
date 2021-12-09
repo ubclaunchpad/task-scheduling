@@ -5,14 +5,17 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class InteractiveTask<T> extends StatelessWidget {
   final DocumentSnapshot? ds;
+  final String id;
   const InteractiveTask({
     this.ds,
     Key? key,
+    required this.id,
   }) : super(key: key);
 
   void deleteTask() {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
-    CollectionReference tasks = firestore.collection('testingTaskCollection');
+    CollectionReference tasks =
+        firestore.collection('groups').doc(id).collection("Tasks");
     if (ds != null) {
       tasks.doc(ds?.id).delete();
     }
@@ -20,7 +23,8 @@ class InteractiveTask<T> extends StatelessWidget {
 
   void completeTask() {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
-    CollectionReference tasks = firestore.collection('testingTaskCollection');
+    CollectionReference tasks =
+        firestore.collection('groups').doc(id).collection("Tasks");
 
     ds!.reference.update({"status": "complete"});
   }

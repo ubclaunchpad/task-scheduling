@@ -8,8 +8,8 @@ import 'interactive_task.dart';
 
 // Define a custom Form widget.
 class NewTaskPanel extends StatefulWidget {
-  const NewTaskPanel({Key? key}) : super(key: key);
-
+  const NewTaskPanel({Key? key, required this.id}) : super(key: key);
+  final String id;
   @override
   State<NewTaskPanel> createState() => _TaskPanel();
 }
@@ -33,7 +33,8 @@ class _TaskPanel extends State<NewTaskPanel> {
 
   void newtask() {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
-    CollectionReference tasks = firestore.collection('testingTaskCollection');
+    CollectionReference tasks =
+        firestore.collection('groups').doc(widget.id).collection("Tasks");
     if (myController.text != "") {
       tasks.add({
         "title": myController.text,

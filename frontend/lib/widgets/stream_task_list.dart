@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -40,6 +39,7 @@ class _StreamTaskListState extends State<StreamTaskList> {
               children: snapshot.data!.docs.map((DocumentSnapshot document) {
                 return InteractiveTask(
                   ds: document,
+                  id: widget.id,
                 );
               }).toList(),
             ),
