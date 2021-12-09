@@ -1,24 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:provider/provider.dart';
 import 'src/authentication_home_page.dart';
 
-void main () async {
-
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp();
 
-
-  runApp(
-    // since applicationState extends ChangeNotifier
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (context) => LoginState()),
-      ],
-      builder: (context, _) => const TaskScheduler(),
-    ),
-  );
+  runApp(TaskScheduler());
 }
 
 class TaskScheduler extends StatelessWidget {
@@ -28,48 +17,12 @@ class TaskScheduler extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Index',
       theme: ThemeData(
-        primarySwatch: Colors.blueGrey,
-      ),
+          primaryColor: Color.fromRGBO(255, 244, 208, 1.0),
+          buttonColor: Color.fromRGBO(255, 244, 208, 1.0),
+          primarySwatch: Colors.deepOrange),
       home: const LoginPage(),
     );
   }
 }
-
-// class MyHomePage extends StatelessWidget {
-//   const MyHomePage({Key? key, required this.title}) : super(key: key);
-//
-//   final String title;
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//
-//         title: Text(title),
-//       ),
-//       body: Center(
-//         child: Column(
-//           mainAxisAlignment: MainAxisAlignment.center,
-//           children: <Widget>[
-//         OutlinedButton(
-//           onPressed: () {
-//             Navigator.push(
-//               context,
-//               MaterialPageRoute(builder: (context) => const LoginPage()),
-//             );
-//           },
-//           child:
-//             const Text(
-//             'Please Click to Login',
-//           )
-//         ),
-//           ],
-//         ),
-//       ), // This trailing comma makes auto-formatting nicer for build methods.
-//     );
-//   }
-// }
-
-

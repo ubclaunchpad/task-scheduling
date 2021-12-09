@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:lp_task_scheduler/src/task.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
@@ -33,7 +34,6 @@ class _TaskPanel extends State<NewTaskPanel> {
   void newtask() {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
     CollectionReference tasks = firestore.collection('testingTaskCollection');
-    print("aaa   " + selectedDate.toString());
     if (myController.text != "") {
       tasks.add({
         "title": myController.text,
@@ -57,149 +57,173 @@ class _TaskPanel extends State<NewTaskPanel> {
       });
     }
 
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: Container(
-        decoration: new BoxDecoration(
-          borderRadius: radius,
-          color: Colors.grey.shade300,
-        ),
-        child: _showDate
-            ? Column(
-                children: [
-                  Container(
-                      decoration: BoxDecoration(
-                        borderRadius: radius,
-                        color: Colors.pink.shade100,
-                      ),
-                      width: MediaQuery.of(context).size.width,
-                      height: 70,
-                      child: TextButton.icon(
-                        style: ButtonStyle(),
-                        icon: Icon(Icons.calendar_today),
-                        label: Text(
-                          "Set Date",
-                          style: TextStyle(
-                              color: Colors.black, fontWeight: FontWeight.bold),
-                        ),
-                        onPressed: () => moveCalendar(),
-                      )),
-                  SfDateRangePicker(
-                    onSelectionChanged:
-                        (DateRangePickerSelectionChangedArgs args) {
-                      selectedDate = args.value;
-                    },
-                    selectionMode: DateRangePickerSelectionMode.single,
-                    initialSelectedDate: DateTime.now(),
-                  ),
-                ],
-              )
-            : Column(children: [
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: 70,
-                  child: FloatingActionButton.extended(
-                    enableFeedback: true,
-                    tooltip: "ADD",
-                    label: Text(
-                      "Add task",
-                      style: TextStyle(
-                          color: Colors.black, fontWeight: FontWeight.bold),
-                    ),
-                    hoverColor: Colors.grey.shade400,
-                    shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(24),
-                            topRight: Radius.circular(24))),
-                    elevation: 1,
-                    onPressed: () {
-                      newtask();
-                    },
-                    backgroundColor: Colors.grey.shade400,
-                    icon: Icon(
-                      Icons.add,
-                      size: 40,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-                Column(
+    return Row(
+      mainAxisAlignment:
+          kIsWeb ? MainAxisAlignment.end : MainAxisAlignment.center,
+      children: [
+        Container(
+          width: kIsWeb
+              ? MediaQuery.of(context).size.width / 3
+              : MediaQuery.of(context).size.width,
+
+          decoration: new BoxDecoration(
+            borderRadius: kIsWeb ? BorderRadius.all(Radius.zero) : radius,
+            color: Color.fromRGBO(247, 227, 218, 1.0),
+          ),
+
+          child: _showDate
+              ? Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Container(
-                      width: MediaQuery.of(context).size.width,
-                      //color: Colors.red,
-                      margin: const EdgeInsets.only(
-                          top: 20.0, left: 10, right: 10, bottom: 10),
-                      padding: const EdgeInsets.only(
-                          top: 10.0, left: 20, right: 20, bottom: 10),
-
-                      // height: MediaQuery.of(context).size.height * 0.09,
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: TextField(
-                          controller: myController,
-                          decoration: const InputDecoration(
-                            //border: InputBorder.none,
-                            hintText: "Task name",
-                            hintStyle: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                              decoration: TextDecoration.none,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ),
+                      margin: EdgeInsets.all(30),
+                      child: SfDateRangePicker(
+                        onSelectionChanged:
+                            (DateRangePickerSelectionChangedArgs args) {
+                          selectedDate = args.value;
+                        },
+                        selectionMode: DateRangePickerSelectionMode.single,
+                        initialSelectedDate: DateTime.now(),
                       ),
                     ),
                     Container(
-                      // height: MediaQuery.of(context).size.height * 0.05,
-                      // width: MediaQuery.of(context).size.width,
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: TextField(
-                          controller: description,
-                          decoration: const InputDecoration(
-                            //border: InputBorder.none,
-                            hintText: "Description",
-                            hintStyle: TextStyle(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 12,
-                              decoration: TextDecoration.none,
-                              color: Colors.black,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(20)),
+                            color: Color.fromRGBO(255, 244, 208, 1.0)),
+                        margin: EdgeInsets.all(30),
+                        width: MediaQuery.of(context).size.width,
+                        height: 50,
+                        child: Container(
+                          decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20)),
+                              color: Color.fromRGBO(255, 244, 208, 1.0)),
+                          child: TextButton.icon(
+                            // style: TextButton.styleFrom(
+                            //   minimumSize:
+                            //       Size(MediaQuery.of(context).size.width, 70),
+                            // ),
+                            icon: Icon(Icons.calendar_today),
+                            label: Text(
+                              "Set Date",
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            onPressed: () => moveCalendar(),
+                          ),
+                        ))
+                  ],
+                )
+              : Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                      Column(
+                        children: [
+                          Container(
+                            width: MediaQuery.of(context).size.width,
+                            //color: Colors.red,
+                            margin: const EdgeInsets.only(
+                                top: 20.0, left: 10, right: 10, bottom: 10),
+                            padding: const EdgeInsets.only(
+                                top: 10.0, left: 20, right: 20, bottom: 10),
+
+                            // height: MediaQuery.of(context).size.height * 0.09,
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: TextField(
+                                controller: myController,
+                                decoration: const InputDecoration(
+                                  //border: InputBorder.none,
+                                  hintText: "Task name",
+                                  hintStyle: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                    decoration: TextDecoration.none,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      ),
-                      margin: const EdgeInsets.only(
-                          top: 10.0, left: 10, right: 10, bottom: 10),
-                      padding: const EdgeInsets.only(
-                          top: 10.0, left: 20, right: 20, bottom: 10),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        TextButton.icon(
-                          icon: Icon(Icons.calendar_today),
-                          label: Text('Due Date'),
-                          onPressed: () => moveCalendar(),
-                        ),
-                        TextButton.icon(
-                          style: TextButton.styleFrom(
-                            enableFeedback: false,
-                            primary: Colors.grey,
+                          Container(
+                            // height: MediaQuery.of(context).size.height * 0.05,
+                            // width: MediaQuery.of(context).size.width,
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: TextField(
+                                controller: description,
+                                decoration: const InputDecoration(
+                                  //border: InputBorder.none,
+                                  hintText: "Description",
+                                  hintStyle: TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 12,
+                                    decoration: TextDecoration.none,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            margin: const EdgeInsets.only(
+                                top: 10.0, left: 10, right: 10, bottom: 10),
+                            padding: const EdgeInsets.only(
+                                top: 10.0, left: 20, right: 20, bottom: 10),
                           ),
-                          icon: Icon(Icons.person),
-                          label: Text('Assign'),
-                          onPressed: () {},
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ]),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              TextButton.icon(
+                                icon: Icon(Icons.calendar_today),
+                                label: Text('Due Date'),
+                                onPressed: () => moveCalendar(),
+                              ),
+                              TextButton.icon(
+                                style: TextButton.styleFrom(
+                                  enableFeedback: false,
+                                  primary: Colors.grey,
+                                ),
+                                icon: Icon(Icons.person),
+                                label: Text('Assign'),
+                                onPressed: () {},
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      Container(
+                          decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20)),
+                              color: Color.fromRGBO(255, 244, 208, 1.0)),
+                          margin: EdgeInsets.all(30),
+                          width: MediaQuery.of(context).size.width,
+                          height: 50,
+                          child: Container(
+                            decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20)),
+                                color: Color.fromRGBO(255, 244, 208, 1.0)),
+                            child: TextButton.icon(
+                              // style: TextButton.styleFrom(
+                              //   minimumSize:
+                              //       Size(MediaQuery.of(context).size.width, 100),
+                              // ),
+                              icon: Icon(Icons.add),
+                              label: Text(
+                                "Add task",
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              onPressed: () => newtask(),
+                            ),
+                          )),
+                    ]),
 
-        // width: MediaQuery.of(context).size.width,
-      ),
+          // width: MediaQuery.of(context).size.width,
+        ),
+      ],
     );
   }
 }

@@ -35,10 +35,10 @@ class _Task extends State<Task> {
     return Center(
       child: Container(
         margin: const EdgeInsets.all(0.0),
-        padding: const EdgeInsets.all(0.0),
+        padding: const EdgeInsets.all(10.0),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
-          color: widget.ds != null ? Colors.white : Colors.white,
+          color: widget.ds != null ? Colors.transparent : Colors.transparent,
         ),
         width: MediaQuery.of(context).size.width,
         height: 100,
