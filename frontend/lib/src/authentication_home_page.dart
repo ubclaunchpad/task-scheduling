@@ -139,7 +139,7 @@ class LoginPage extends StatelessWidget {
         ),
         TextButton.icon(
           onPressed: () {
-            signInWithGooglePopUp();
+            signInWithGoogle();
           },
           icon: const Icon(Icons.login),
           label: const Text('Sign in with Google'),
