@@ -160,7 +160,7 @@ class _InvitePanel extends State<InvitePanel> {
                       color: Colors.black, fontWeight: FontWeight.bold),
                 ),
                 onPressed: () => {
-                  // TODO: @Anu
+                  addUserToGroup();
                 },
               ),
             )),
