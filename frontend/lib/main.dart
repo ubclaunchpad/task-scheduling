@@ -1,19 +1,17 @@
-import 'dart:developer';
-import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:flutter/material.dart';
-import 'package:src/task.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:src/widgets/interactive_group.dart';
 import 'package:src/widgets/interactive_task.dart';
 import 'package:src/widgets/new_task_panel.dart';
 import 'package:src/widgets/stream_task_list.dart';
+import 'src/authentication_home_page.dart';
 
 void main() async {
-  // FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
   WidgetsFlutterBinding.ensureInitialized();
+
   await Firebase.initializeApp();
-  // FirebaseFunctions.instance.useFunctionsEmulator('localhost', 5001);
+
   runApp(TaskScheduler());
 }
 
@@ -24,6 +22,7 @@ class TaskScheduler extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+
       title: 'Tasks',
       theme: ThemeData(primarySwatch: Colors.pink),
       home: const MyHomePage(title: 'Tasks'),
@@ -142,6 +141,12 @@ class _MyHomePageState extends State<MyHomePage> {
               InteractiveGroup(),
             ],
           )),
+
+      title: 'Index',
+      theme: ThemeData(
+          primaryColor: Color.fromRGBO(255, 244, 208, 1.0),
+          primarySwatch: Colors.deepOrange),
+      home: const LoginPage(),
     );
   }
 }
