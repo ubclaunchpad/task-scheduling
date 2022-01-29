@@ -11,8 +11,20 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    FirebaseAuth _auth = FirebaseAuth.instance;
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    _auth.userChanges().listen((user) {
+      if (user != null) {
+        CollectionReference tasks = firestore.collection(user.email!);
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => TaskPage(
+                    title: user.displayName!, user: user, id: tasks.id)));
+      }
+    });
     Future<UserCredential> signInWithGoogle() async {
-      // Trigger the authentication flow
+      // Trigger the authentication flow;
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
       // Obtain the auth details from the request
       final GoogleSignInAuthentication? googleAuth =
@@ -24,7 +36,7 @@ class LoginPage extends StatelessWidget {
       );
       // Once signed in, return the UserCredential
       final ret = await FirebaseAuth.instance.signInWithCredential(credential);
-      FirebaseFirestore firestore = FirebaseFirestore.instance;
+      // FirebaseFirestore firestore = FirebaseFirestore.instance;
       CollectionReference tasks = firestore.collection(ret.user!.email!);
 
       Navigator.pushReplacement(
