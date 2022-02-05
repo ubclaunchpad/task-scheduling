@@ -1,0 +1,143 @@
+{
+  "project_info": {
+    "project_number": "90581567547",
+    "firebase_url": "https://taskscheduler-1d765-default-rtdb.firebaseio.com",
+    "project_id": "taskscheduler-1d765",
+    "storage_bucket": "taskscheduler-1d765.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:90581567547:android:a263847b2952f6606db41e",
+        "android_client_info": {
+          "package_name": "com.example.src"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "90581567547-sdo12vh7uj0cjgf610t87hromph54n7j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.src",
+            "certificate_hash": "4c6dac1f9730ab950b5dca6678d04f9d02d25b0a"
+          }
+        },
+        {
+          "client_id": "90581567547-jivd39rr9gej9ndbj1sn6gkgm1iqv1e2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBDaB5t8xQvlUz8ymwBPiV2KBXA3gWC3NM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "90581567547-9tumntheh9at7bbullddo8pieihvgjhr.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "90581567547-c0fliu9nieusppkghv7bmt64r1p7sfis.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.launchpad.indexit"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:90581567547:android:771617d426b7af316db41e",
+        "android_client_info": {
+          "package_name": "com.launchpad.batch"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "90581567547-7ldcc3o1pquhhar2q07c6lvulsotm5s1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.launchpad.batch",
+            "certificate_hash": "fbca73a1445a23f0862d390978103d99eadbb3bf"
+          }
+        },
+        {
+          "client_id": "90581567547-jivd39rr9gej9ndbj1sn6gkgm1iqv1e2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBDaB5t8xQvlUz8ymwBPiV2KBXA3gWC3NM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "90581567547-9tumntheh9at7bbullddo8pieihvgjhr.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "90581567547-c0fliu9nieusppkghv7bmt64r1p7sfis.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.launchpad.indexit"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:90581567547:android:6b53f6bdcecffd576db41e",
+        "android_client_info": {
+          "package_name": "launchpad.batch"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "90581567547-764432aqegkj4gel3nb9l5ohncg061uq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "launchpad.batch",
+            "certificate_hash": "fbca73a1445a23f0862d390978103d99eadbb3bf"
+          }
+        },
+        {
+          "client_id": "90581567547-jivd39rr9gej9ndbj1sn6gkgm1iqv1e2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBDaB5t8xQvlUz8ymwBPiV2KBXA3gWC3NM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "90581567547-9tumntheh9at7bbullddo8pieihvgjhr.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "90581567547-c0fliu9nieusppkghv7bmt64r1p7sfis.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.launchpad.indexit"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
