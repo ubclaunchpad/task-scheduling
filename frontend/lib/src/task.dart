@@ -25,11 +25,13 @@ class _Task extends State<Task> {
   @override
   Widget build(BuildContext context) {
     String due = "";
+    int points = 1;
     dynamic? data = widget.ds?.data();
     if (data == Null) return Container();
     try {
       DateTime date = DateTime.parse(data["dueDate"].toDate().toString());
       due = "Due " + formatDate(date, [M, ' ', d]);
+      points = data["points"];
     } catch (e) {}
 
     return Center(
@@ -76,14 +78,28 @@ class _Task extends State<Task> {
                       color: Colors.grey),
                 ),
                 right: 2,
-              )
+              ),
             ]),
             Container(
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  widget.description,
-                ),
+              child: Column(
+                children: [
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      widget.description,
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Points: $points",
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 13,
+                          color: Colors.grey),
+                    ),
+                  ),
+                ],
               ),
               padding: const EdgeInsets.all(5.0),
             ),
