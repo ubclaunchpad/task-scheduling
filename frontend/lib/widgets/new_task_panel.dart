@@ -30,12 +30,13 @@ class _TaskPanel extends State<NewTaskPanel> {
   final myController = TextEditingController();
   final description = TextEditingController();
   ViewState _showState = ViewState.standard;
-  String _assignee = "";
+  String _assignee = "Unassigned";
   DateTime selectedDate = DateTime.now();
   int _points = 0;
   @override
   void initState() {
     super.initState();
+    _assignee = "Unassigned";
   }
 
   @override
@@ -166,7 +167,8 @@ class _TaskPanel extends State<NewTaskPanel> {
                                   'Due ${DateFormat('MMM dd yyyy').format(selectedDate)}'),
                               onPressed: () => setViewState(ViewState.date),
                             ),
-                            AssignDropdown(widget.id, setAssignee, null)
+                            AssignDropdown(
+                                widget.id, setAssignee, _assignee, null)
                           ],
                         ),
                         Row(

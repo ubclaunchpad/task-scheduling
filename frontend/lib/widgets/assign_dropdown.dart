@@ -8,7 +8,9 @@ typedef void StringCallback(String val);
 class AssignDropdown extends StatefulWidget {
   String groupId = "";
   StringCallback setAssignee;
-  AssignDropdown(String _groupId, this.setAssignee, Key? key)
+  String dropdownValue;
+  AssignDropdown(
+      String _groupId, this.setAssignee, this.dropdownValue, Key? key)
       : super(key: key) {
     groupId = _groupId;
   }
@@ -18,7 +20,6 @@ class AssignDropdown extends StatefulWidget {
 }
 
 class _AssignDropdownState extends State<AssignDropdown> {
-  String dropdownValue = 'Unassigned';
   @override
   Widget build(BuildContext context) {
     Stream<QuerySnapshot<Map<String, dynamic>>> _groupMembers =
@@ -31,7 +32,7 @@ class _AssignDropdownState extends State<AssignDropdown> {
         builder: (context, AsyncSnapshot<dynamic> snapshot) {
           if (!snapshot.hasData) {
             return DropdownButton<String>(
-              value: dropdownValue,
+              value: widget.dropdownValue,
               iconEnabledColor: Colors.deepOrange,
               icon: const Padding(
                 padding: EdgeInsets.only(left: 8.0),
@@ -43,16 +44,15 @@ class _AssignDropdownState extends State<AssignDropdown> {
               ),
               onChanged: (String? newValue) {
                 setState(() {
-                  dropdownValue = newValue!;
-                  widget.setAssignee(newValue);
+                  widget.setAssignee(newValue!);
                 });
               },
               style: const TextStyle(
                   color: Colors.deepOrange, fontWeight: FontWeight.bold),
-              items: const [
+              items: [
                 DropdownMenuItem<String>(
-                  value: 'Unassigned',
-                  child: Text('Unassigned'),
+                  value: widget.dropdownValue,
+                  child: Text(widget.dropdownValue),
                 ),
               ],
             );
@@ -63,7 +63,7 @@ class _AssignDropdownState extends State<AssignDropdown> {
               width: MediaQuery.of(context).size.width * 0.5,
               child: DropdownButton<String>(
                   isExpanded: true,
-                  value: dropdownValue,
+                  value: widget.dropdownValue,
                   iconEnabledColor: Colors.deepOrange,
                   icon: Icon(Icons.person),
                   elevation: 16,
@@ -72,8 +72,7 @@ class _AssignDropdownState extends State<AssignDropdown> {
                   ),
                   onChanged: (String? newValue) {
                     setState(() {
-                      dropdownValue = newValue!;
-                      widget.setAssignee(newValue);
+                      widget.setAssignee(newValue!);
                     });
                   },
                   style: const TextStyle(
@@ -101,16 +100,7 @@ class _AssignDropdownState extends State<AssignDropdown> {
                         child: Text(user["email"]),
                       );
                     }).toList(),
-                  ]
-                  // items: ["Unassigned", "Test"]
-                  //     .map<DropdownMenuItem<String>>((String document) {
-                  //   dynamic user = document;
-                  //   return DropdownMenuItem<String>(
-                  //     value: user,
-                  //     child: Text(user),
-                  //   );
-                  // }).toList(),
-                  ),
+                  ]),
             ),
           );
         });
