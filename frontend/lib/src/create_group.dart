@@ -26,7 +26,6 @@ class _CreateGroup extends State<CreateGroup> {
 
   void createAGroup() async {
     CollectionReference ref = FirebaseFirestore.instance.collection("groups");
-    print(widget.id);
     ref.add({
       "groupName": myController.text,
       "users": [widget.id],

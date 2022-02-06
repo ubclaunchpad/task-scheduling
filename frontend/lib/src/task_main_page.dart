@@ -194,23 +194,26 @@ class _MyTaskPageState extends State<TaskPage> {
                                 color: panelOption == PanelOptions.INVITE
                                     ? Color.fromRGBO(255, 244, 208, 1.0)
                                     : Colors.transparent),
-                            child: TextButton.icon(
-                                onPressed: () {
-                                  setState(() {
-                                    if (panelOption != PanelOptions.INVITE) {
-                                      panelOption = PanelOptions.INVITE;
-                                      panelController.open();
-                                    } else {
-                                      panelOption = PanelOptions.DEFAULT;
-                                      panelController.close();
-                                    }
-                                  });
-                                },
-                                label: Text(""),
-                                icon: const Icon(
-                                  Icons.group_add_outlined,
-                                  size: 20,
-                                )),
+                            child: id == widget.user.email
+                                ? Container()
+                                : TextButton.icon(
+                                    onPressed: () {
+                                      setState(() {
+                                        if (panelOption !=
+                                            PanelOptions.INVITE) {
+                                          panelOption = PanelOptions.INVITE;
+                                          panelController.open();
+                                        } else {
+                                          panelOption = PanelOptions.DEFAULT;
+                                          panelController.close();
+                                        }
+                                      });
+                                    },
+                                    label: Text(""),
+                                    icon: const Icon(
+                                      Icons.group_add_outlined,
+                                      size: 20,
+                                    )),
                           ),
                         ],
                       ),

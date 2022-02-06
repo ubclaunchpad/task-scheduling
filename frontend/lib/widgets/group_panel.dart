@@ -22,15 +22,38 @@ class GroupPanel extends StatefulWidget {
 }
 
 class _GroupPanel extends State<GroupPanel> {
+  CollectionReference refToGroups =
+      FirebaseFirestore.instance.collection("groups");
+
+  CollectionReference refToUsers =
+      FirebaseFirestore.instance.collection("users");
   @override
   void dispose() {
     super.dispose();
   }
 
-  void leaveGroup() {
-    // TODO: remove user from group
-    // TODO: remove group if no other user exists
-    // TODO: remove group from user
+  void leaveGroup() async {
+    // can't delete user's personal collection
+    if (widget.id == widget.userid) {
+      return;
+    }
+    // remove user email from group
+    dynamic group = (await refToGroups.doc(widget.id).get()).data();
+    List<dynamic> users = group["users"];
+    users.remove(widget.userid);
+    refToGroups.doc(widget.id).update({"users": users});
+    // delete group if it has no users
+    if (users.isEmpty) {
+      refToGroups.doc(widget.id).delete();
+    }
+
+    // remove group from user info
+    dynamic userDoc = (await refToUsers.doc(widget.userid).get()).data();
+    Map<String, dynamic> groups = userDoc["groups"];
+    groups.remove(widget.id);
+    refToUsers.doc(widget.userid).update({"groups": groups});
+
+    widget.change(widget.userid, widget.userid);
   }
 
   void signOut() {
@@ -78,7 +101,7 @@ class _GroupPanel extends State<GroupPanel> {
                 future: getGroups(),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData || snapshot.hasError) {
-                    return Text("Error getting groups from firebase");
+                    return const Text("Error getting groups from firebase");
                   } else {
                     dynamic data = snapshot.data!.data();
                     dynamic g = [];
@@ -88,39 +111,36 @@ class _GroupPanel extends State<GroupPanel> {
 
                     return LimitedBox(
                       maxHeight: 300,
-                      child: Container(
-                        child: ListView.builder(
-                            itemCount: g.length,
-                            shrinkWrap: true,
-                            itemBuilder: (context, index) {
-                              return Container(
+                      child: ListView.builder(
+                          itemCount: g.length,
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) {
+                            return Container(
+                                decoration: const BoxDecoration(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(20)),
+                                    color: Color.fromRGBO(255, 244, 208, 1.0)),
+                                margin: const EdgeInsets.all(10),
+                                width: MediaQuery.of(context).size.width,
+                                child: Container(
                                   decoration: const BoxDecoration(
                                       borderRadius:
                                           BorderRadius.all(Radius.circular(20)),
                                       color:
                                           Color.fromRGBO(255, 244, 208, 1.0)),
-                                  margin: EdgeInsets.all(10),
-                                  width: MediaQuery.of(context).size.width,
-                                  child: Container(
-                                    decoration: const BoxDecoration(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(20)),
-                                        color:
-                                            Color.fromRGBO(255, 244, 208, 1.0)),
-                                    child: TextButton(
-                                      child: Text(
-                                        g[index][1],
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      onPressed: () {
-                                        widget.change(g[index][0], g[index][1]);
-                                      },
+                                  child: TextButton(
+                                    child: Text(
+                                      g[index][1],
+                                      style: const TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold),
                                     ),
-                                  ));
-                            }),
-                      ),
+                                    onPressed: () {
+                                      widget.change(g[index][0], g[index][1]);
+                                    },
+                                  ),
+                                ));
+                          }),
                     );
                   }
                 }),
@@ -140,7 +160,9 @@ class _GroupPanel extends State<GroupPanel> {
                                 builder: (context) =>
                                     CreateGroup(id: widget.userid)))
                       }),
-              actionButton("Leave Group", () => leaveGroup()),
+              widget.id == widget.userid
+                  ? Container()
+                  : actionButton("Leave Group", () => leaveGroup()),
               actionButton("Sign out", () => signOut()),
             ],
           ),
