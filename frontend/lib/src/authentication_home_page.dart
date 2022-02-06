@@ -71,7 +71,7 @@ class LoginPage extends StatelessWidget {
             Image.asset(
               'lib/assets/icons/homelogo.png',
               height: 145,
-              width: 145,
+              width: 245,
             ),
           ]),
           margin: const EdgeInsets.fromLTRB(0, 180, 0, 0),

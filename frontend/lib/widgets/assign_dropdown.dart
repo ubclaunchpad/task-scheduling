@@ -1,9 +1,7 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-typedef void StringCallback(String val);
+typedef StringCallback = void Function(String val);
 
 class AssignDropdown extends StatefulWidget {
   String groupId = "";
@@ -59,13 +57,13 @@ class _AssignDropdownState extends State<AssignDropdown> {
           }
           return Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Container(
+            child: SizedBox(
               width: MediaQuery.of(context).size.width * 0.5,
               child: DropdownButton<String>(
                   isExpanded: true,
                   value: widget.dropdownValue,
                   iconEnabledColor: Colors.deepOrange,
-                  icon: Icon(Icons.person),
+                  icon: const Icon(Icons.person),
                   elevation: 16,
                   underline: Container(
                     height: 2,
