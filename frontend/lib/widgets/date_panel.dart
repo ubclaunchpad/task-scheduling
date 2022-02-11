@@ -3,13 +3,11 @@ import 'package:lp_task_scheduler/widgets/new_task_panel.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class DatePanel extends StatefulWidget {
-  Function setViewState = (ViewState state) => {};
-  Function setSelectedDate = (DateTime date) => {};
-  DatePanel(Function _setViewState, Function _setSelectedDate, Key? key)
-      : super(key: key) {
-    setSelectedDate = _setSelectedDate;
-    setViewState = _setViewState;
-  }
+  Function onPressed;
+  Function onSelectionChanged;
+  DateTime? initialDate;
+  DatePanel(this.onPressed, this.onSelectionChanged, this.initialDate, Key? key)
+      : super(key: key) {}
 
   @override
   State<DatePanel> createState() => _DatePanelState();
@@ -17,6 +15,11 @@ class DatePanel extends StatefulWidget {
 
 class _DatePanelState extends State<DatePanel> {
   @override
+  @override
+  void initState() {
+    super.initState();
+  }
+
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -24,9 +27,10 @@ class _DatePanelState extends State<DatePanel> {
         Container(
           margin: const EdgeInsets.all(30),
           child: SfDateRangePicker(
+            initialDisplayDate: widget.initialDate,
             onSelectionChanged: (DateRangePickerSelectionChangedArgs args) {
               print("hello");
-              widget.setSelectedDate(args.value);
+              widget.onSelectionChanged(args.value);
             },
             selectionMode: DateRangePickerSelectionMode.single,
             initialSelectedDate: DateTime.now(),
@@ -55,7 +59,7 @@ class _DatePanelState extends State<DatePanel> {
                       color: Colors.black, fontWeight: FontWeight.bold),
                 ),
                 onPressed: () {
-                  widget.setViewState(ViewState.standard);
+                  widget.onPressed();
                 },
               ),
             ))

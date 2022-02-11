@@ -47,7 +47,11 @@ class InteractiveTask<T> extends StatelessWidget {
     return TouchableOpacity(
       onTap: () {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => TaskDetails()));
+            context,
+            MaterialPageRoute(
+                builder: (context) => TaskDetails(
+                      ds: ds,
+                    )));
       },
       child: Dismissible(
         onDismissed: (direction) => dismissItem(direction),
