@@ -25,7 +25,6 @@ class _DatePanelState extends State<DatePanel> {
           margin: const EdgeInsets.all(30),
           child: SfDateRangePicker(
             onSelectionChanged: (DateRangePickerSelectionChangedArgs args) {
-              print("hello");
               widget.setSelectedDate(args.value);
             },
             selectionMode: DateRangePickerSelectionMode.single,

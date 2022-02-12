@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-typedef void UpdateValue(int val);
+typedef UpdateValue = void Function(int val);
 
 class PointSelect extends StatefulWidget {
   final UpdateValue updateValue;
-  PointSelect(this.updateValue, Key? key) : super(key: key);
+  const PointSelect(this.updateValue, Key? key) : super(key: key);
 
   @override
   State<PointSelect> createState() => _PointSelectState();
@@ -24,12 +24,12 @@ class _PointSelectState extends State<PointSelect> {
             });
             widget.updateValue(value);
           },
-          items: [
-            const DropdownMenuItem(
+          items: const [
+            DropdownMenuItem(
               value: 1,
               child: Text('1'),
             ),
-            const DropdownMenuItem(
+            DropdownMenuItem(
               value: 2,
               child: Text('2'),
             ),

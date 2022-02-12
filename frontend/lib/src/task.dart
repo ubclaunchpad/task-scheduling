@@ -1,8 +1,8 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../widgets/interactive_task.dart';
 import 'package:date_format/date_format.dart';
-import 'dart:collection';
 
 class Task extends StatefulWidget {
   const Task(
@@ -26,7 +26,7 @@ class _Task extends State<Task> {
   Widget build(BuildContext context) {
     String due = "";
     int points = 1;
-    dynamic? data = widget.ds?.data();
+    dynamic data = widget.ds?.data();
     if (data == Null) return Container();
     try {
       DateTime date = DateTime.parse(data["dueDate"].toDate().toString());
@@ -110,7 +110,7 @@ class _Task extends State<Task> {
   }
 
   Widget status() {
-    dynamic? data = widget.ds?.data();
+    dynamic data = widget.ds?.data();
     String status = data["status"].toString();
     BorderRadiusGeometry radius = const BorderRadius.only(
         //bottomLeft: Radius.circular(10.0),
