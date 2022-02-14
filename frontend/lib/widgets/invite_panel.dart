@@ -51,8 +51,8 @@ class _InvitePanel extends State<InvitePanel> {
 
   @override
   Widget build(BuildContext context) {
-    DocumentReference ref =
-        FirebaseFirestore.instance.collection("groups").doc(widget.id);
+    // DocumentReference ref =
+    //     FirebaseFirestore.instance.collection("groups").doc(widget.id);
 
     BorderRadiusGeometry radius = const BorderRadius.only(
       topLeft: Radius.circular(24.0),
@@ -79,40 +79,40 @@ class _InvitePanel extends State<InvitePanel> {
                 ),
               ),
             ),
-            FutureBuilder<DocumentSnapshot?>(
-              future: ref.get(),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData || snapshot.hasError) {
-                  return const Text("Could not fetch groups from firebase");
-                } else {
-                  dynamic data = snapshot.data!.data();
+            // FutureBuilder<DocumentSnapshot?>(
+            //   future: ref.get(),
+            //   builder: (context, snapshot) {
+            //     if (!snapshot.hasData || snapshot.hasError) {
+            //       return const Text("Could not fetch groups from firebase");
+            //     } else {
+            //       dynamic data = snapshot.data!.data();
 
-                  return SizedBox(
-                      height: 200,
-                      child: ListView.builder(
-                          itemCount: data["users"].length,
-                          itemBuilder: (context, index) {
-                            return Container(
-                                decoration: const BoxDecoration(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(20)),
-                                    color: Color.fromRGBO(255, 244, 208, 1.0)),
-                                margin: const EdgeInsets.only(
-                                    left: 20, right: 20, bottom: 5),
-                                width: MediaQuery.of(context).size.width,
-                                height: 40,
-                                child: Center(
-                                  child: Text(
-                                    data["users"][index],
-                                    style: const TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ));
-                          }));
-                }
-              },
-            ),
+            //       return SizedBox(
+            //           height: 200,
+            //           child: ListView.builder(
+            //               itemCount: data["users"].length,
+            //               itemBuilder: (context, index) {
+            //                 return Container(
+            //                     decoration: const BoxDecoration(
+            //                         borderRadius:
+            //                             BorderRadius.all(Radius.circular(20)),
+            //                         color: Color.fromRGBO(255, 244, 208, 1.0)),
+            //                     margin: const EdgeInsets.only(
+            //                         left: 20, right: 20, bottom: 5),
+            //                     width: MediaQuery.of(context).size.width,
+            //                     height: 40,
+            //                     child: Center(
+            //                       child: Text(
+            //                         data["users"][index],
+            //                         style: const TextStyle(
+            //                             color: Colors.black,
+            //                             fontWeight: FontWeight.bold),
+            //                       ),
+            //                     ));
+            //               }));
+            //     }
+            //   },
+            // ),
             Container(
               padding: const EdgeInsets.only(
                   top: 1.0, left: 20, right: 20, bottom: 10),
