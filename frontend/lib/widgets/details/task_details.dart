@@ -61,7 +61,9 @@ class _TaskDetailsState extends State<TaskDetails> {
               DetailRow(
                   icon: Icons.person,
                   label: "Assigned To",
-                  data: data["assignedTo"][0]),
+                  data: data["assignedTo"] != null
+                      ? data["assignedTo"][0]
+                      : "Unassigned"),
               DetailRow(
                   icon: Icons.calendar_today,
                   label: "Due:",
@@ -69,7 +71,8 @@ class _TaskDetailsState extends State<TaskDetails> {
               DetailRow(
                   icon: Icons.star_border_rounded,
                   label: "Points",
-                  data: data["points"].toString()),
+                  data:
+                      data["points"] != null ? data["points"].toString() : "1"),
             ]),
             DetailDescription(
               description: data["description"],
