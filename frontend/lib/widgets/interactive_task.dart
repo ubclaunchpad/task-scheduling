@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lp_task_scheduler/widgets/task_details.dart';
+import 'package:lp_task_scheduler/widgets/details/task_details.dart';
 import 'package:lp_task_scheduler/widgets/touchable_opacity.dart';
 import '../src/task.dart';
 import 'package:firebase_core/firebase_core.dart';

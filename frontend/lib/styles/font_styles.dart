@@ -26,3 +26,18 @@ TextStyle titleStyle = const TextStyle(
     color: Colors.black,
     fontSize: 24,
     fontWeight: FontWeight.w400);
+
+TextStyle hintStyle = const TextStyle(
+    fontFamily: 'SF Pro',
+    color: Colors.grey,
+    fontSize: 15,
+    fontWeight: FontWeight.w400);
+
+TextStyle largerStyle = const TextStyle(
+    fontFamily: 'SF Pro', fontSize: 20, fontWeight: FontWeight.w400);
+
+TextStyle smallHintStyle = const TextStyle(
+    fontFamily: 'SF Pro',
+    color: Colors.grey,
+    fontSize: 10,
+    fontWeight: FontWeight.w400);
