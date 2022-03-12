@@ -12,7 +12,7 @@ ColorScheme scheme = const ColorScheme(
     brightness: Brightness.light,
     primary: Color.fromARGB(255, 200, 202, 236),
     onPrimary: Color.fromARGB(255, 15, 16, 20),
-    secondary: Colors.red,
+    secondary: Color.fromARGB(255, 255, 234, 167),
     onSecondary: Colors.blue,
     error: Colors.red,
     onError: Colors.red,

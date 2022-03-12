@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:lp_task_scheduler/styles/theme.dart';
+import 'package:lp_task_scheduler/widgets/button.dart';
 
 class InvitePanel extends StatefulWidget {
   const InvitePanel({Key? key, required this.id}) : super(key: key);
@@ -51,8 +53,8 @@ class _InvitePanel extends State<InvitePanel> {
 
   @override
   Widget build(BuildContext context) {
-    // DocumentReference ref =
-    //     FirebaseFirestore.instance.collection("groups").doc(widget.id);
+    
+    DocumentReference ref = FirebaseFirestore.instance.collection("groups").doc(widget.id);
 
     BorderRadiusGeometry radius = const BorderRadius.only(
       topLeft: Radius.circular(24.0),
@@ -62,7 +64,8 @@ class _InvitePanel extends State<InvitePanel> {
     return Container(
       decoration: BoxDecoration(
         borderRadius: radius,
-        color: const Color.fromRGBO(247, 227, 218, 1.0),
+        //color: const Color.fromRGBO(247, 227, 218, 1.0),
+        color: const Color.fromARGB(255, 255, 234, 167),
       ),
       child:
           Column(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
@@ -70,9 +73,9 @@ class _InvitePanel extends State<InvitePanel> {
           children: [
             Container(
               padding: const EdgeInsets.only(
-                  top: 20.0, left: 20, right: 20, bottom: 10),
+                  top: 30.0, left: 20, right: 20, bottom: 20),
               child: const Text(
-                "Users",
+                "Invite people to",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
@@ -115,14 +118,17 @@ class _InvitePanel extends State<InvitePanel> {
             // ),
             Container(
               padding: const EdgeInsets.only(
-                  top: 1.0, left: 20, right: 20, bottom: 10),
-              child: const Text(
-                "Invite by email",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
+                  top: 5.0, left: 25, right: 20, bottom: 5),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: const Text(
+                  "Type emails below to add users:",
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey,
+                  ),
                 ),
-              ),
+              )
             ),
             Container(
               width: MediaQuery.of(context).size.width,
@@ -136,14 +142,18 @@ class _InvitePanel extends State<InvitePanel> {
                 alignment: Alignment.centerLeft,
                 child: TextField(
                   controller: inviteEmail,
-                  decoration: const InputDecoration(
-                    //border: InputBorder.none,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    filled: true,
+                    fillColor: Colors.white,
                     hintText: "name@email.com",
                     hintStyle: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                       decoration: TextDecoration.none,
-                      color: Colors.black,
+                      color: Colors.grey,
                     ),
                   ),
                 ),
@@ -151,31 +161,34 @@ class _InvitePanel extends State<InvitePanel> {
             ),
           ],
         ),
-        Container(
-            decoration: const BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(20)),
-                color: Color.fromRGBO(255, 244, 208, 1.0)),
-            margin: const EdgeInsets.all(30),
-            width: MediaQuery.of(context).size.width,
-            height: 50,
-            child: Container(
-              decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(20)),
-                  color: Color.fromRGBO(255, 244, 208, 1.0)),
-              child: TextButton.icon(
-                // style: TextButton.styleFrom(
-                //   minimumSize:
-                //       Size(MediaQuery.of(context).size.width, 100),
-                // ),
-                icon: const Icon(Icons.add),
-                label: const Text(
-                  "Add email to group",
-                  style: TextStyle(
-                      color: Colors.black, fontWeight: FontWeight.bold),
-                ),
-                onPressed: () => {inviteUser()},
-              ),
-            )),
+        // Container(
+        //     decoration: const BoxDecoration(
+        //         borderRadius: BorderRadius.all(Radius.circular(20)),
+        //         color: Color.fromRGBO(255, 244, 208, 1.0)),
+        //     margin: const EdgeInsets.all(30),
+        //     width: MediaQuery.of(context).size.width,
+        //     height: 50,
+        //     child: Container(
+        //       decoration: const BoxDecoration(
+        //           borderRadius: BorderRadius.all(Radius.circular(20)),
+        //           color: Color.fromRGBO(255, 244, 208, 1.0)),
+        //       child: TextButton.icon(
+        //         // style: TextButton.styleFrom(
+        //         //   minimumSize:
+        //         //       Size(MediaQuery.of(context).size.width, 100),
+        //         // ),
+        //         icon: const Icon(Icons.add),
+        //         label: const Text(
+        //           "Add email to group",
+        //           style: TextStyle(
+        //               color: Colors.black, fontWeight: FontWeight.bold),
+        //         ),
+        //         onPressed: () => {inviteUser()},
+        //       ),
+        //     )),
+        Button(
+            label: "INVITE",
+            onPressedF: () => {inviteUser()}),
       ]),
     );
   }
