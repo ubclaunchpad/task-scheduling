@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'src/authentication_home_page.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp();
 
-  runApp(TaskScheduler());
+  runApp(const TaskScheduler());
 }
 
 class TaskScheduler extends StatelessWidget {

@@ -1,12 +1,10 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'interactive_task.dart';
 
 class StreamTaskList extends StatefulWidget {
-  StreamTaskList({Key? key, required this.id}) : super(key: key);
+  const StreamTaskList({Key? key, required this.id}) : super(key: key);
   final String id;
   @override
   _StreamTaskListState createState() => _StreamTaskListState();
@@ -33,7 +31,7 @@ class _StreamTaskListState extends State<StreamTaskList> {
               heightFactor: 1,
             );
           }
-          return Container(
+          return SizedBox(
             width: MediaQuery.of(context).size.width,
             child: ListView(
               children: snapshot.data!.docs.map((DocumentSnapshot document) {

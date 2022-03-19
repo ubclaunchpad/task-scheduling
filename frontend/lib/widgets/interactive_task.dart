@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:lp_task_scheduler/widgets/details/task_details.dart';
 import 'package:lp_task_scheduler/widgets/touchable_opacity.dart';
 import '../src/task.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class InteractiveTask<T> extends StatelessWidget {
@@ -24,10 +23,6 @@ class InteractiveTask<T> extends StatelessWidget {
   }
 
   void completeTask() {
-    FirebaseFirestore firestore = FirebaseFirestore.instance;
-    CollectionReference tasks =
-        firestore.collection('groups').doc(id).collection("Tasks");
-
     ds!.reference.update({"status": "complete"});
   }
 

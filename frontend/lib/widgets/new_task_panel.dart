@@ -1,16 +1,10 @@
-import 'dart:developer';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:lp_task_scheduler/src/task.dart';
 import 'package:lp_task_scheduler/widgets/assign_dropdown.dart';
 import 'package:lp_task_scheduler/widgets/date_panel.dart';
 import 'package:lp_task_scheduler/widgets/point_button.dart';
-import 'package:syncfusion_flutter_datepicker/datepicker.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'interactive_task.dart';
 
 // Define a custom Form widget.
 class NewTaskPanel extends StatefulWidget {
@@ -98,7 +92,6 @@ class _TaskPanel extends State<NewTaskPanel> {
       setState(() {
         _points = value;
       });
-      print(_points);
     }
 
     Widget renderFromViewState() {
@@ -186,14 +179,14 @@ class _TaskPanel extends State<NewTaskPanel> {
                   ],
                 ),
                 Container(
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(20)),
                         color: Color.fromRGBO(255, 244, 208, 1.0)),
-                    margin: EdgeInsets.all(30),
+                    margin: const EdgeInsets.all(30),
                     width: MediaQuery.of(context).size.width,
                     height: 50,
                     child: Container(
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(20)),
                           color: Color.fromRGBO(255, 244, 208, 1.0)),
                       child: TextButton.icon(
@@ -201,8 +194,8 @@ class _TaskPanel extends State<NewTaskPanel> {
                         //   minimumSize:
                         //       Size(MediaQuery.of(context).size.width, 100),
                         // ),
-                        icon: Icon(Icons.add),
-                        label: Text(
+                        icon: const Icon(Icons.add),
+                        label: const Text(
                           "Add task",
                           style: TextStyle(
                               color: Colors.black, fontWeight: FontWeight.bold),
@@ -220,7 +213,7 @@ class _TaskPanel extends State<NewTaskPanel> {
         Container(
           width: MediaQuery.of(context).size.width,
           decoration: BoxDecoration(
-            borderRadius: kIsWeb ? BorderRadius.all(Radius.zero) : radius,
+            borderRadius: kIsWeb ? const BorderRadius.all(Radius.zero) : radius,
             color: const Color.fromRGBO(247, 227, 218, 1.0),
           ),
           child: renderFromViewState(),
