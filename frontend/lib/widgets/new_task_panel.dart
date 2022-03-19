@@ -70,6 +70,12 @@ class _TaskPanel extends State<NewTaskPanel> {
       });
     }
 
+    void onDatePressed() {
+      setState(() {
+        _showState = ViewState.standard;
+      });
+    }
+
     void setSelectedDate(DateTime date) {
       setState(() {
         selectedDate = date;
@@ -91,7 +97,7 @@ class _TaskPanel extends State<NewTaskPanel> {
     Widget renderFromViewState() {
       switch (_showState) {
         case ViewState.date:
-          return DatePanel(setViewState, setSelectedDate, null);
+          return DatePanel(onDatePressed, setSelectedDate, null, null);
         case ViewState.standard:
         default:
           return Column(

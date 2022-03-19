@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:lp_task_scheduler/widgets/details/task_details.dart';
+import 'package:lp_task_scheduler/widgets/touchable_opacity.dart';
 import '../src/task.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -37,15 +39,25 @@ class InteractiveTask<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     dynamic data = ds!.data();
-    return Dismissible(
-      onDismissed: (direction) => dismissItem(direction),
-      key: UniqueKey(),
-      child: Task(
-          title: data["title"].toString(),
-          description: data["description"].toString(),
-          ds: ds),
-      background: buildSwipeActionLeft(),
-      secondaryBackground: buildSwipeActionRight(),
+    return TouchableOpacity(
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => TaskDetails(
+                      ds: ds,
+                    )));
+      },
+      child: Dismissible(
+        onDismissed: (direction) => dismissItem(direction),
+        key: UniqueKey(),
+        child: Task(
+            title: data["title"].toString(),
+            description: data["description"].toString(),
+            ds: ds),
+        background: buildSwipeActionLeft(),
+        secondaryBackground: buildSwipeActionRight(),
+      ),
     );
   }
 
