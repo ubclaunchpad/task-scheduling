@@ -87,8 +87,6 @@ class _CreateGroup extends State<CreateGroup> {
                   Button(
                       label: "Invite Users",
                       onPressedF: () => _showCupertinoDialog()),
-                  Button(
-                      label: "Delete Group", onPressedF: () => createAGroup()),
                 ],
               ),
             ]),

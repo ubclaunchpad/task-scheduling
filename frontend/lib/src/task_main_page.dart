@@ -225,9 +225,7 @@ class _MyTaskPageState extends State<TaskPage> {
             ),
             drawer: Drawer(
                 child: SidePanel(
-              user: widget.user,
-              parent: context,
-            )),
+                    user: widget.user, parent: context, change: setId)),
             body: Stack(
               children: [
                 Container(
