@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:lp_task_scheduler/widgets/group_panel.dart';
 import 'package:lp_task_scheduler/widgets/invite_panel.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
@@ -7,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lp_task_scheduler/widgets/new_task_panel.dart';
 import 'package:lp_task_scheduler/widgets/stream_task_list.dart';
+import 'package:lp_task_scheduler/widgets/side_panel.dart';
 
 enum PanelOptions { GROUPS, INVITE, DEFAULT }
 
@@ -89,7 +89,6 @@ class _MyTaskPageState extends State<TaskPage> {
       return Scaffold(
         appBar: AppBar(
           title: const Text("NOT CONNECTED TO FIREBASE"),
-          backgroundColor: const Color(0xff885566),
         ),
       );
     }
@@ -224,6 +223,9 @@ class _MyTaskPageState extends State<TaskPage> {
 
               backgroundColor: Colors.white,
             ),
+            drawer: Drawer(
+                child: SidePanel(
+                    user: widget.user, parent: context, change: setId)),
             body: Stack(
               children: [
                 Container(

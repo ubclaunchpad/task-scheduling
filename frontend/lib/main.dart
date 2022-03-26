@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'src/authentication_home_page.dart';
+import 'styles/theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,9 +19,7 @@ class TaskScheduler extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Index',
-      theme: ThemeData(
-          primaryColor: Color.fromRGBO(255, 244, 208, 1.0),
-          primarySwatch: Colors.deepOrange),
+      theme: themeDataDark,
       home: const LoginPage(),
     );
   }
