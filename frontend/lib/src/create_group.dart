@@ -14,6 +14,7 @@ class CreateGroup extends StatefulWidget {
 class _CreateGroup extends State<CreateGroup> {
   final myController = TextEditingController();
   DateTime selectedDate = DateTime.now();
+  String groupId = 'ss';
 
   @override
   void initState() {
@@ -83,37 +84,17 @@ class _CreateGroup extends State<CreateGroup> {
               Column(
                 children: [
                   Button(
-                      label: "Create Group", onPressedF: () => createAGroup()),
+                      label: "Create Group", onPressedF: () => createAGroup(false)),
                   Button(
                       label: "Invite Users",
-                      onPressedF: () => _showCupertinoDialog()),
+                      onPressedF: () => createAGroup(true)),
+                  Button(
+                      label: "Delete Group", onPressedF: () => createAGroup(false)),
                 ],
               ),
             ]),
       ),
     );
-  }
-
-  void createAGroup() async {
-    CollectionReference ref = FirebaseFirestore.instance.collection("groups");
-    ref.add({
-      "groupName": myController.text,
-      "users": [widget.id],
-    }).then((value) async {
-      CollectionReference users =
-          FirebaseFirestore.instance.collection("users");
-      DocumentSnapshot doc = await users.doc(widget.id).get();
-      dynamic groups = doc.data();
-      Map<String, dynamic> newGroups = groups["groups"];
-      newGroups[value.id] = myController.text;
-
-      users.doc(widget.id).update({"groups": newGroups});
-      Navigator.pop(context);
-    });
-  }
-
-  _dismissDialog() {
-    Navigator.pop(context);
   }
 
   void _showCupertinoDialog() {
@@ -126,8 +107,60 @@ class _CreateGroup extends State<CreateGroup> {
                 height: MediaQuery.of(context).size.height * 0.6,
                 child: Scaffold(
                     backgroundColor: Colors.transparent,
-                    body: Center(child: InvitePanel(id: "ss")))),
+                    body: Center(child: InvitePanel(id: groupId)))),
           );
         });
+  }
+
+  Future<void> createAGroup(bool invite) async {
+    CollectionReference ref = FirebaseFirestore.instance.collection("groups");
+    CollectionReference users =
+            FirebaseFirestore.instance.collection("users");
+    DocumentSnapshot doc = await users.doc(widget.id).get();
+    dynamic groups = doc.data();
+    if (invite) {
+      if (groupId != 'ss') {
+          _showCupertinoDialog();
+      } else {
+        ref.add({
+          "groupName": myController.text,
+          "users": [widget.id],
+        }).then((value) async {
+          Map<String, dynamic> newGroups = groups["groups"];
+          newGroups[value.id] = myController.text;
+
+          groupId = value.id;
+          users.doc(widget.id).update({"groups": newGroups});
+          _showCupertinoDialog();
+      });
+        //Navigator.pop(context);
+      }
+    } else {
+      if (groupId != 'ss') {
+        await ref.doc(groupId).update({"groupName": myController.text});
+        ref.doc(groupId).get().then((data) => {
+          data["users"].forEach((user) => {
+            users.doc(user).update({"groups.$groupId": myController.text})
+          })
+        });
+      } else {
+        ref.add({
+          "groupName": myController.text,
+          "users": [widget.id],
+        }).then((value) async {
+          Map<String, dynamic> newGroups = groups["groups"];
+          newGroups[value.id] = myController.text;
+
+          groupId = value.id;
+          users.doc(widget.id).update({"groups": newGroups});
+        });
+      }
+      Navigator.pop(context);
+    }
+    
+  }
+
+  _dismissDialog() {
+    Navigator.pop(context);
   }
 }

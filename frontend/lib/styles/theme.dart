@@ -11,8 +11,8 @@ ThemeData themeDataDark = ThemeData(colorScheme: scheme);
 ColorScheme scheme = const ColorScheme(
     brightness: Brightness.light,
     primary: Color.fromARGB(255, 200, 202, 236),
-    onPrimary: Color.fromARGB(255, 140, 144, 223),
-    secondary: Colors.red,
+    onPrimary: Color.fromARGB(255, 15, 16, 20),
+    secondary: Color.fromARGB(255, 255, 234, 167),
     onSecondary: Colors.blue,
     error: Colors.red,
     onError: Colors.red,
